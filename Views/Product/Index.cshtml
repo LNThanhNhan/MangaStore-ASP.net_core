@@ -1,0 +1,17 @@
+﻿@model List<Product>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+<p>Xin chào </p>
+<a asp-asp-controller="product" asp-action="create">Thêm sản phẩm</a>
+@foreach (var item in Model)
+{
+	<p>@item.id</p>
+	<p>@item.name</p>
+	<p>@item.price</p>
+	<p>@item.description</p>
+	<br />
+}
+
