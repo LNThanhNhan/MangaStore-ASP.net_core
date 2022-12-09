@@ -1,98 +1,60 @@
-﻿@model Product
+﻿@using MangaStore.ViewModels;
+@model ProductViewModel
 
 @{
     ViewData["Title"] = "Create";
+	var TheLoai = ViewData["TheLoai"] as Dictionary<string, int>;
 }
 
-<h1>Create</h1>
+<h1>Thêm sản phẩm</h1>
 
-<h4>Product</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="name" class="control-label"></label>
-                <input asp-for="name" class="form-control" />
-                <span asp-validation-for="name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="slug" class="control-label"></label>
-                <input asp-for="slug" class="form-control" />
-                <span asp-validation-for="slug" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="image" class="control-label"></label>
-                <input asp-for="image" class="form-control" />
-                <span asp-validation-for="image" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="author" class="control-label"></label>
-                <input asp-for="author" class="form-control" />
-                <span asp-validation-for="author" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="author_slug" class="control-label"></label>
-                <input asp-for="author_slug" class="form-control" />
-                <span asp-validation-for="author_slug" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="description" class="control-label"></label>
-                <input asp-for="description" class="form-control" />
-                <span asp-validation-for="description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="list_price" class="control-label"></label>
-                <input asp-for="list_price" class="form-control" />
-                <span asp-validation-for="list_price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="price" class="control-label"></label>
-                <input asp-for="price" class="form-control" />
-                <span asp-validation-for="price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="discount_rate" class="control-label"></label>
-                <input asp-for="discount_rate" class="form-control" />
-                <span asp-validation-for="discount_rate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="quantity" class="control-label"></label>
-                <input asp-for="quantity" class="form-control" />
-                <span asp-validation-for="quantity" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="publish_year" class="control-label"></label>
-                <input asp-for="publish_year" class="form-control" />
-                <span asp-validation-for="publish_year" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="size" class="control-label"></label>
-                <input asp-for="size" class="form-control" />
-                <span asp-validation-for="size" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="collection" class="control-label"></label>
-                <input asp-for="collection" class="form-control" />
-                <span asp-validation-for="collection" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="collection_slug" class="control-label"></label>
-                <input asp-for="collection_slug" class="form-control" />
-                <span asp-validation-for="collection_slug" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="category" class="control-label"></label>
-                <input asp-for="category" class="form-control" />
-                <span asp-validation-for="category" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+<form asp-action="Create">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <label asp-for="name" ></label>
+    <input asp-for="name"  />
+    <br />
+    
+    <label asp-for="image" ></label>
+    <input asp-for="image"  />
+    <br/>
+    <label asp-for="author" ></label>
+    <input asp-for="author" />
+	<br />
+    <label asp-for="description"></label>
+    <textarea asp-for="description" /> </textarea>
+	<br />
+    <label asp-for="list_price" ></label>
+    <input asp-for="list_price" />
+	<br />
+    <label asp-for="discount_rate"></label>
+    <input asp-for="discount_rate" value=10/>
+	<br />
+    <label asp-for="quantity" ></label>
+    <input asp-for="quantity"  />
+	<br />
+    <label asp-for="publish_year" ></label>
+    <input asp-for="publish_year" />
+	<br />
+    <label asp-for="size" ></label>
+    <input asp-for="size" />
+	<br />
+    <label asp-for="collection" ></label>
+    <input asp-for="collection"/>
+	<br />
+	<label asp-for="category" ></label>
+    <select asp-for="category" >
+		<option value="">Chọn thể loại</option>
+		@if (TheLoai is not null)
+		{
+			foreach (var item in TheLoai)
+			{
+				<option value="@item.Value">@item.Key</option>
+			}
+		}
+	</select>
+	<br />
+    <input type="submit" value="Create" class="btn btn-primary" />
+</form>
 
 <div>
     <a asp-action="Index">Back to List</a>

@@ -1,17 +1,48 @@
-﻿@model List<Product>
+﻿@using MangaStore.ViewModels;
+@model List<ProductViewModel>
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-<p>Xin chào </p>
+<h1>Quản lý sản phẩm</h1>
 <a asp-asp-controller="product" asp-action="create">Thêm sản phẩm</a>
-@foreach (var item in Model)
-{
-	<p>@item.id</p>
-	<p>@item.name</p>
-	<p>@item.price</p>
-	<p>@item.description</p>
-	<br />
-}
+<table class="table table-striped">
+    <tr>
+        <th>#</th>
+        <th >Tên truyện</th>
+        <th>Tác giả</th>
+        <th>Giá</th>
+        <th>Số lượng tồn</th>
+        <th>Năm xuất bản</th>
+        <th>Kích thước</th>
+        <th>Thể loại</th>
+        <th>Bộ truyện</th>
+        <h>Sửa</h>
+        <th>Xóa</th>
+    </tr>
+    @foreach (var product in Model)
+    {
+    <tr>
+        <td>product.id</td>
+        <td>product.name</td>
+        <td>product.author</td>
+        <td>product.priceVND</td>
+        <td>product.quantity</td>
+        <td>product.publish_year</td>
+        <td>product.size</td>
+        <td>product.category_name</td>
+        <td>product.collection</td>
+        <td>
+            <a asp-asp-controller="product" asp-action="edit">
+                Sửa
+            </a>
+        </td>
+        <td>
+            <form asp-action="Delete">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Xóa</button>
+            </form>
+        </td>
+    </tr>
+    }
+</table>
 

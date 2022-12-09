@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Reflection.Emit;
 using MangaStore.Models;
+
 namespace MangaStore.Data
 {
     public class Context : DbContext

@@ -6,9 +6,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 // Add dbcontext
-builder.Services.AddDbContext<Context>(options =>
-   options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-	);
+builder.Services.AddDbContext<Context>
+(
+	options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
 // Add razor runtime compilation
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
