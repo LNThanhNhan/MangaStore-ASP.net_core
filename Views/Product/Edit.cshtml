@@ -1,0 +1,61 @@
+﻿@using MangaStore.ViewModels
+@model EditProductViewModel
+@{
+	ViewData["Title"] = "Edit";
+	var TheLoai = ViewData["TheLoai"] as Dictionary<string, int>;
+}
+
+<h1>Thêm sản phẩm</h1>
+
+<form asp-action="Edit" method="post">
+	<div asp-validation-summary="All" class="text-danger"></div>
+	<label asp-for="name" ></label>
+	<input asp-for="name"  value=@Model.name/>
+	<br />
+	<img src="@Model.image" width="100" heigh="250"/>
+	<br />
+	<label asp-for="image" ></label>
+	<input asp-for="image" value=@Model.image/>
+	<br/>
+	<label asp-for="author" ></label>
+	<input asp-for="author" value=@Model.author/>
+	<br />
+	<label asp-for="description"></label>
+	<textarea asp-for="description" />@Model.description</textarea>
+	<br />
+	<label asp-for="list_price" ></label>
+	<input asp-for="list_price" value=@Model.list_price/>
+	<br />
+	<label asp-for="discount_rate"></label>
+	<input asp-for="discount_rate" value=@Model.discount_rate />
+	<br />
+	<label asp-for="quantity" ></label>
+	<input asp-for="quantity" value=@Model.quantity/>
+	<br />
+	<label asp-for="publish_year" ></label>
+	<input asp-for="publish_year" value=@Model.publish_year/>
+	<br />
+	<label asp-for="size" ></label>
+	<input asp-for="size" value=@Model.size/>
+	<br />
+	<label asp-for="collection" ></label>
+	<input asp-for="collection" value=@Model.collection/>
+	<br />
+	<label asp-for="category" ></label>
+	<select asp-for="category" >
+		<option value="">Chọn thể loại</option>
+		@if (TheLoai is not null)
+		{
+			foreach (var item in TheLoai)
+			{
+				<option value=@item.Value>@item.Key</option>
+			}
+		}
+	</select>
+	<br />
+	<input type="submit" value="Cập nhật" class="btn btn-primary" />
+</form>
+
+<div>
+	<a asp-action="Index">Back to List</a>
+</div>

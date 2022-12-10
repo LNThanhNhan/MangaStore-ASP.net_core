@@ -7,6 +7,7 @@ using AutoMapper;
 using FluentValidation;
 using FluentValidation.Results;
 using FluentValidation.AspNetCore;
+using X.PagedList;
 
 namespace MangaStore.Controllers
 {
@@ -15,23 +16,29 @@ namespace MangaStore.Controllers
 		private readonly Context _context;
         private readonly IMapper _mapper;
 		private readonly IValidator<ProductViewModel> _viewValidator;
-		public ProductController(Context context, IMapper mapper, IValidator<ProductViewModel> viewValidator)
+        private readonly IValidator<EditProductViewModel> _editViewlValidator;
+        public ProductController(Context context, IMapper mapper, IValidator<ProductViewModel> viewValidator, IValidator<EditProductViewModel> editViewlValidator)
         {
             _context = context;
             _mapper = mapper;
-			_viewValidator = viewValidator;
-		}
-
-		public IActionResult Index()
-        {
-            var list = new List<ProductViewModel>();
-            _context.Products.ToList().ForEach
-            (
-                pd => list.Add(_mapper.Map<ProductViewModel>(pd))
-            );
-            return View(list);
+            _viewValidator = viewValidator;
+            _editViewlValidator = editViewlValidator;
         }
 
+		public IActionResult Index(int? page)
+		{
+			//Code thường
+			var list = new List<ProductViewModel>();
+			_context.Products.ToList().ForEach
+			(
+				pd => list.Add(_mapper.Map<ProductViewModel>(pd))
+			);
+			//Code phân trang
+			var pageNumber = page ?? 1;
+			ViewBag.Products = list.ToPagedList(pageNumber, 10);
+			return View();
+		}	
+       
 		[HttpGet]
 		public IActionResult Create()
 		{
@@ -43,7 +50,6 @@ namespace MangaStore.Controllers
 		[ValidateAntiForgeryToken]
 		public IActionResult Create(ProductViewModel product)
 		{
-			//product.CustomCheck(_context,ModelState);
 			ValidationResult result = _viewValidator.Validate(product);
 			if (result.IsValid)
             {
@@ -57,35 +63,38 @@ namespace MangaStore.Controllers
 			return View(product);
 		}
 
-		/*[HttpGet]
+		[HttpGet]
 		public IActionResult Edit(int id)
 		{
 			var product = _context.Products.Find(id);
-			if (product == null)
+            if (product == null)
 			{
 				return NotFound();
 			}
-			ViewData["TheLoai"] = ProductCategory.getArrayView();
-			return View(new EditProductViewModel(product));
+            EditProductViewModel editViewModel = _mapper.Map<EditProductViewModel>(product);
+            ViewData["TheLoai"] = ProductCategory.getArrayView();
+			return View(editViewModel);
 		}
 
-		[HttpPut]
+		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public IActionResult Edit(EditProductViewModel product)
 		{
-			product.CustomCheck(_context, ModelState);
+			ValidationResult result = _editViewlValidator.Validate(product);
 			if (ModelState.IsValid)
 			{
-				Product newProduct = new Product(product);
-				_context.Products.Update(newProduct);
+				Product editProduct = _mapper.Map<Product>(product);
+				_context.Products.Update(editProduct);
 				_context.SaveChanges();
 				return RedirectToAction("Index");
 			}
+			ModelState.Clear();
+			result.AddToModelState(this.ModelState);
 			return View(product);
 		}
 
 		//delete
-		[HttpDelete]
+		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public IActionResult Delete(int id)
 		{
@@ -97,6 +106,6 @@ namespace MangaStore.Controllers
 			_context.Products.Remove(product);
 			_context.SaveChanges();
 			return RedirectToAction("Index");
-		}*/
+		}
 	}
 }
