@@ -9,7 +9,7 @@ namespace MangaStore.Models
     [Index(nameof(slug), IsUnique = true)]
     public class Product
     {
-		public Product()
+		/*public Product()
 		{
 		}
 		public Product(ProductViewModel pd)
@@ -48,7 +48,7 @@ namespace MangaStore.Models
 			collection = pd.collection;
 			collection_slug = pd.collection_slug;
 			category = pd.category;
-		}
+		}*/
 
 		[Key]
         public int id { get; set; }
@@ -74,7 +74,6 @@ namespace MangaStore.Models
         public string author_slug { get; set; }
 
         [Required]
-        //Data annotation cho kiểu mặc định là nvarchar(max) trong sql server
         public string description { get; set; }
 
         [Required]
@@ -98,10 +97,10 @@ namespace MangaStore.Models
         [MaxLength(30)]
         public string size { get; set; }
 
-        [MaxLength(50)]
+        [MaxLength(255)]
         public string? collection { get; set; }
 
-        [MaxLength(50)]
+        [MaxLength(255)]
         public string? collection_slug { get; set; }
 
         [Required]

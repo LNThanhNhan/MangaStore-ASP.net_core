@@ -17,21 +17,21 @@
         <th>Kích thước</th>
         <th>Thể loại</th>
         <th>Bộ truyện</th>
-        <h>Sửa</h>
+        <th>Sửa</th>
         <th>Xóa</th>
     </tr>
     @foreach (var product in Model)
     {
     <tr>
-        <td>product.id</td>
-        <td>product.name</td>
-        <td>product.author</td>
-        <td>product.priceVND</td>
-        <td>product.quantity</td>
-        <td>product.publish_year</td>
-        <td>product.size</td>
-        <td>product.category_name</td>
-        <td>product.collection</td>
+        <td>@product.id</td>
+        <td>@product.name</td>
+        <td>@product.author</td>
+	    <td>@product.priceVND</td>
+        <td>@product.quantity</td>
+        <td>@product.publish_year</td>
+        <td>@product.size</td>
+        <td>@product.category_name</td>
+        <td>@product.collection</td>
         <td>
             <a asp-asp-controller="product" asp-action="edit">
                 Sửa

@@ -3,15 +3,23 @@ using MangaStore.Data;
 using MangaStore.Models;
 using MangaStore.Enums;
 using MangaStore.ViewModels;
+using AutoMapper;
+using FluentValidation;
+using FluentValidation.Results;
+using FluentValidation.AspNetCore;
 
 namespace MangaStore.Controllers
 {
     public class ProductController : Controller
     {
 		private readonly Context _context;
-		public ProductController(Context context)
-		{
-			_context = context;
+        private readonly IMapper _mapper;
+		private readonly IValidator<ProductViewModel> _viewValidator;
+		public ProductController(Context context, IMapper mapper, IValidator<ProductViewModel> viewValidator)
+        {
+            _context = context;
+            _mapper = mapper;
+			_viewValidator = viewValidator;
 		}
 
 		public IActionResult Index()
@@ -19,7 +27,7 @@ namespace MangaStore.Controllers
             var list = new List<ProductViewModel>();
             _context.Products.ToList().ForEach
             (
-                pd => list.Add(new ProductViewModel(pd))
+                pd => list.Add(_mapper.Map<ProductViewModel>(pd))
             );
             return View(list);
         }
@@ -35,18 +43,21 @@ namespace MangaStore.Controllers
 		[ValidateAntiForgeryToken]
 		public IActionResult Create(ProductViewModel product)
 		{
-			product.CustomCheck(_context,ModelState);
-            if (ModelState.IsValid)
+			//product.CustomCheck(_context,ModelState);
+			ValidationResult result = _viewValidator.Validate(product);
+			if (result.IsValid)
             {
-                Product newProduct = new Product(product);
+                Product newProduct = _mapper.Map<Product>(product);
                 _context.Products.Add(newProduct);
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ModelState.Clear();
+            result.AddToModelState(this.ModelState);
 			return View(product);
 		}
 
-		[HttpGet]
+		/*[HttpGet]
 		public IActionResult Edit(int id)
 		{
 			var product = _context.Products.Find(id);
@@ -86,6 +97,6 @@ namespace MangaStore.Controllers
 			_context.Products.Remove(product);
 			_context.SaveChanges();
 			return RedirectToAction("Index");
-		}
+		}*/
 	}
 }
