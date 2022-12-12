@@ -2,10 +2,14 @@
 @using X.PagedList
 @using X.PagedList.Web.Common
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@{
-	ViewData["Title"] = "Index";
-}
+
 <link href="/Content/PagedList.css" rel="stylesheet" type="text/css" />
+<form class="float-end" asp-action="Index" method="get">
+	<label>
+		Tìm kiếm:
+	</label>
+	<input type="search" name="q" value=@ViewBag.q >
+</form>
 <h1>Quản lý sản phẩm</h1>
 <a asp-asp-controller="product" asp-action="create">Thêm sản phẩm</a>
 <table class="table table-striped">
@@ -48,8 +52,9 @@
 	}
 </table>
 @Html.PagedListPager((IPagedList)ViewBag.Products, page => Url.Action("Index","Product",
-	new { page=page ,}),
-		new PagedListRenderOptions {
+	new { page=page ,q=ViewBag.q}),
+	new PagedListRenderOptions 
+	{
 		LiElementClasses = new string[] { "page-item" },
-		PageClasses = new string[] { "page-link" }})
-
+		PageClasses = new string[] { "page-link" }
+	})

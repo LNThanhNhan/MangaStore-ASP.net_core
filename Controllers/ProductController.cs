@@ -25,7 +25,7 @@ namespace MangaStore.Controllers
             _editViewlValidator = editViewlValidator;
         }
 
-		public IActionResult Index(int? page)
+		public IActionResult Index(int? page, string? q)
 		{
 			//Code thường
 			var list = new List<ProductViewModel>();
@@ -33,9 +33,15 @@ namespace MangaStore.Controllers
 			(
 				pd => list.Add(_mapper.Map<ProductViewModel>(pd))
 			);
+			//Code query
+			if (!string.IsNullOrEmpty(q))
+			{
+				list = list.Where(p => p.name.Contains(q,StringComparison.OrdinalIgnoreCase)).ToList();
+			}
 			//Code phân trang
 			var pageNumber = page ?? 1;
 			ViewBag.Products = list.ToPagedList(pageNumber, 10);
+			ViewBag.q = q;
 			return View();
 		}	
        

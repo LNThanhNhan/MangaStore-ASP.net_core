@@ -1,8 +1,293 @@
-﻿@{
+﻿@using MangaStore.ViewModels
+@{
     ViewData["Title"] = "Home Page";
+	List<ProductViewModel> list = ViewData["list"] as List<ProductViewModel>;
 }
+@section css{
+	<link rel="stylesheet" href="~/css/TrangChu.css" asp-append-version="true" />
+}
+<partial name="Header"/>
+<div class="contentTrangChu">
+    <div class="display">
+        <div class="bannerlist">
+            <div class="banner">
+                <img src="~/image/ms_banner_img3 1.png" class="imgbanner1">
+            </div>
+            <div class="banner">
+                <img src="~/image/ms_banner_img1 (1).png" class="imgbanner">
+            </div>
+        </div>
+    </div>
+    <div class="listsp">
+        <table class="spban">
+            <tr>
+                <td>
+                    <div class="tbsp">
+                        <table class="tblistsp">
+                            <tr>
+                                <td class="tdspmoi">
+                                    <div class="sachmoi">
+                                        <a href="" class="hrefspmoi">
+                                            MỚI
+                                        </a>
+                                        <div class="divhr">
+                                            <hr class="hr">
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="tdspbanchay">
+                                    <div class="sachbanchay">
+                                        <a href="" class="hrefspbanchay">
+                                            BÁN CHẠY
+                                        </a>
+                                        <div class="divhr">
+                                            <hr class="hr">
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="tdsphot">
+                                    <div class="sachhot">
+                                        <a href="" class="hrefsphot">
+                                            HOT DEALS
+                                        </a>
+                                        <div class="divhr">
+                                            <hr class="hr">
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="danhsachsp">
+                    <div class="tbtatcasp">
+                        <table class="tatcasp">
+	                        <tr>
+		                        @foreach (var item in list.Select((value, i) => new { i, value }))
+		                        {
+			                        var product = item.value;
+			                        var index = item.i;
+			                        if(index<=4)
+			                        {
+				                        <td class="tdsp">
+					                        <a href="" style="text-decoration: none">
+						                        <div class="imagesp">
+							                        <img src="@product.image" class="imgsp">
+						                        </div>
+						                        <div class="makhuyenmai">
+							                        <div class="imagemagiam">
+								                        <img src="~/image/magiam.png" class="imgmagiam">
+							                        </div>
+							                        <div class="sale">
+								                        <span class="lbsale">-@(product.discount_rate)%</span>
+							                        </div>
+						                        </div>
+						                        <div class="thongtinsp">
+							                        <div class="lbsp">
+								                        <label for="lbsp">
+									                        @product.name
+								                        </label>
+							                        </div>
+							                        <div class="giasp">
+								                        <a href="" class="htgiasp">
+									                        @product.priceVND
+								                        </a>
+							                        </div>
+						                        </div>
+					                        </a>
+				                        </td>
+			                        }
+		                        }
+	                        </tr>
+	                        <tr>
+		                        @foreach (var item in list.Select((value, i) => new { i, value }))
+		                        {
+			                        var product = item.value;
+			                        var index = item.i;
+			                        if (index > 4)
+			                        {
+				                        <td class="tdsp">
+					                        <a href="" style="text-decoration: none">
+						                        <div class="imagesp">
+							                        <img src="@product.image" class="imgsp">
+						                        </div>
+						                        <div class="makhuyenmai">
+							                        <div class="imagemagiam">
+								                        <img src="~/image/magiam.png" class="imgmagiam">
+							                        </div>
+							                        <div class="sale">
+								                        <span class="lbsale">-@(product.discount_rate)%</span>
+							                        </div>
+						                        </div>
+						                        <div class="thongtinsp">
+							                        <div class="lbsp">
+								                        <label for="lbsp">
+									                        @product.name
+								                        </label>
+							                        </div>
+							                        <div class="giasp">
+								                        <a href="" class="htgiasp">
+									                        @product.priceVND
+								                        </a>
+							                        </div>
+						                        </div>
+					                        </a>
+				                        </td>
+			                        }
+		                        }
+	                        </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="tdbutton">
+                    <div class="buttonmore">
+                        <button class="btnxemthem">
+                            XEM THÊM
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="tdhr">
+                    <div class="divhr2">
+                        <hr class="hr2">
+                    </div>
+                </td>
+            </tr>
+	        <tr>
+		        <td class="tdbaivietmoi">
+			        <div class="labelbaivietmoi">
+				        <label for="baivietmoi">
+					        BÀI VIẾT MỚI
+				        </label>
+			        </div>
+		        </td>
+	        </tr>
+            <tr>
+                <td class="tabletintuc">
+                    <div class="tbtintuc">
+                        <table class="tablenews">
+                            <tr>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+                                <td class="tdnews1">
+                                    <table class="tbnews">
+                                        <tr>
+                                            <td class="tdimg">
+                                                <div class="news">
+                                                    <img src="https://file.hstatic.net/200000287623/article/22291480_1360463820742776_6215763102557804907_o_164b9a8f372b466a87cfa24a8e1c2bb7.jpg" class="imgnews">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tdngaythangnam">
+                                                <div class="ngaythangnam">
+                                                    <span class="ngayupdate">
+                                                        25/02/2022
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tdtieudenew">
+                                                <div class="hreftieudenew">
+                                                    <a href="" class="tieudenews">
+                                                        [REVIEW ĐỘC GIẢ] 5 CENTIMET TRÊN GIÂY – BI KỊCH TUỔI TRẺ VÀ CUỘC HÀNH TRÌNH TÌM LẠI LẼ SỐNG
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tdnoidungnews">
+                                                <div class="noidungnews">
+                                                    5 Centimet Trên Giây của Shinkai Makoto không chỉ là chút vị đắng của tách cà phê mà ai cũng phải một lần nhâm nhi trong đời, mà còn là tác phẩm có dấu ấn đậm nét của văn học Nhật Bản. 5 Centimet Trên Giây lột tả một bi kịch tuổi trẻ đầy day dứt, ám ảnh, nhưng cũng chan chứa nghị lực, tươi sáng và cực kì dứt khoát.
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td class="tdnews1">
+                                    <table class="tbnews">
+                                        <tr>
+                                            <td class="tdimg">
+                                                <div class="news">
+                                                    <img src="https://file.hstatic.net/200000287623/article/khi_te_bao_lam_viec_-_truyen_tranh_manga_7a8148b658b34591952bb5ceb0408c66.jpg" class="imgnews">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tdngaythangnam">
+                                                <div class="ngaythangnam">
+                                                    <span class="ngayupdate">
+                                                        25/02/2022
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tdtieudenew">
+                                                <div class="hreftieudenew">
+                                                    <a href="" class="tieudenews">
+                                                        [ĐIỂM SÁCH] KHI TẾ BÀO LÀM VIỆC - CUỘC CHIẾN KHÔNG HỒI KẾT TRONG CƠ THỂ CON NGƯỜI
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tdnoidungnews">
+                                                <div class="noidungnews">
+                                                    Bất cứ khi nào bạn cảm thấy cô đơn hay buồn bã, hãy nhớ rằng, trong cơ thể bạn có đến hàng chục nghìn tỉ tế bào đang âm thầm đồng hành và hiến dâng trọn đời vì bạn, từng giây từng phút! Khi Tế Bào Làm Việc – series manga 6 tập đến từ tác giả Akane Shimizu chính là câu chuyện về những tế bào đáng yêu đang nỗ lực vì sức khỏe của chúng ta đó!
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td class="tdnews1">
+                                    <table class="tbnews">
+                                        <tr>
+                                            <td class="tdimg">
+                                                <div class="news">
+                                                    <img src="https://file.hstatic.net/200000287623/article/bakemonogatari_-_ban_gioi_han_va_dac_biet_tai_viet_nam_11111111_7781146bbf6d44b4bbfc73c808f3ddfe.jpg" class="imgnews">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tdngaythangnam">
+                                                <div class="ngaythangnam">
+                                                    <span class="ngayupdate">
+                                                        25/02/2022
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tdtieudenew">
+                                                <div class="hreftieudenew">
+                                                    <a href="" class="tieudenews">
+                                                        [ĐIỂM SÁCH] BAKEMONOGATARI - THANH XUÂN "THÚ VỊ" BÊN MUÔN VÀN ĐIỀU "QUÁI GỞ"
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tdnoidungnews">
+                                                <div class="noidungnews">
+                                                    Giữa thời hiện đại, trong bối cảnh đô thị hết sức bình thường, vậy mà cậu nam sinh Araragi Koyomi lại bắt gặp 1001 câu chuyện "quái dị" - ma - thần - quỷ - quái - hay là những thực thể cứ ngỡ là không có thực! Đó chính là khởi đầu của Bakemonogatari - series light novel đình đám đến từ cây bút tài hoa NISIO ISIN. Hãy cùng IPM tìm hiểu thêm về tác phẩm này nhé!
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+
+            </tr>
+        </table>
+    </div>
 </div>
+<partial name="Footer" />
