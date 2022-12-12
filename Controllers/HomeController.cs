@@ -38,109 +38,194 @@ namespace MangaStore.Controllers
 		}
 
         [HttpGet]
-        [Route("{type}/{q}")]
-        public IActionResult Search(string type,string q, int? page, SearchFilterViewModel? filterViewModel)
+        public IActionResult Search(string?q, int? page, SearchFilterViewModel? filterViewModel)
         {
             var list = new List<ProductViewModel>();
-            //Search theo từng loại search
-            if (type == "search")
+
+            var products = _context.Products.ToList();
+			if (!string.IsNullOrEmpty(q))
+			{
+				products.Where(p => p.name.Contains(q, StringComparison.OrdinalIgnoreCase)).ToList();
+			}
+            if (products.Count == 0)
             {
-                //Lấy ra danh sách sản phẩm có tên chứa chuỗi q
-                var products = _context.Products
-                    .Where(p => p.name.Contains(q, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
-                if (products.Count == 0)
-                {
-                    return NotFound();
-                }
-                products.ForEach(pd => list.Add(_mapper.Map<ProductViewModel>(pd)));
+                return NotFound();
             }
-            else if(type=="author")
-            {
-                //Lấy ra danh sách sản phẩm có author_slug chứa chuỗi q
-                var products = _context.Products
-                    .Where(p => p.author_slug.Contains(q, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
-                if (products.Count == 0)
-                {
-                    return NotFound();
-                }
-                products.ForEach(pd => list.Add(_mapper.Map<ProductViewModel>(pd)));
-            }
-            else if(type=="collection" && !string.IsNullOrEmpty(q))
-            {
-                //Lấy ra danh sách sản phẩm có collection_slug chứa chuỗi q
-                var products = _context.Products
-                    .Where(p => p.collection_slug.Contains(q, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
-                if (products.Count == 0)
-                {
-                    return NotFound();
-                }
-                products.ForEach(pd => list.Add(_mapper.Map<ProductViewModel>(pd)));
-            }
-            else if(type=="collection" && string.IsNullOrEmpty(q))
-            {
-                //Lấy ra danh sách sản phẩm có collection
-                var products = _context.Products
-                    .Where(p => !string.IsNullOrEmpty(p.collection))
-                    .ToList();
-                if (products.Count == 0)
-                {
-                    return NotFound();
-                }
-                products.ForEach(pd => list.Add(_mapper.Map<ProductViewModel>(pd)));
-            }
-            else if(type=="hot-deal")
-            {
-                //Lấy ra danh sách sản phẩm có discount_rate giảm dần
-                var products = _context.Products
-                    .Where(p => !string.IsNullOrEmpty(p.collection))
-                    .ToList();
-                if (products.Count == 0)
-                {
-                    return NotFound();
-                }
-                products.ForEach(pd => list.Add(_mapper.Map<ProductViewModel>(pd)));
-            }
+            products.ForEach(pd => list.Add(_mapper.Map<ProductViewModel>(pd)));
             //Tạo filter nếu chưa có và thực hiện filter
-            if (filterViewModel == null)
+            if (filterViewModel is null)
             {
-                SearchFilterViewModel filter = new SearchFilterViewModel();
-                filter.Categories = new List<CheckBoxItem>();
-                filter.Categories=ProductCategory.getArrayView().Select(
-                    item => new CheckBoxItem
-                    {
-                        Value = item.Value,
-                        Display = item.Key,
-                        IsChecked = false
-                    }
-                ).ToList();
-                filter.min_price = 0;
-                filter.max_price = 0;
+	            filterViewModel = new SearchFilterViewModel();
             }
-            else
-            {
-                for (int i = 0; i < filterViewModel.Categories.Count; i++)
-                {
-                    if (filterViewModel.Categories[i].IsChecked)
-                    {
-                        list = list.Where(p => p.category == filterViewModel.Categories[i].Value 
-                                       &&p.price<=filterViewModel.max_price
-                                       &&p.price>=filterViewModel.min_price).ToList();
-                    }
-                }
-                if (list.Count == 0)
-                {
-                    return NotFound();
-                }
-            }
+            filterViewModel.Categories=ProductCategory.getArrayView().Select(
+	            item => new CheckBoxItem
+	            {
+		            Value = item.Value,
+		            Display = item.Key,
+		            IsChecked = false
+	            }
+            ).ToList();
+            filterViewModel.min_price = 0;
+            filterViewModel.max_price = 0;
             //Code phân trang
             var pageNumber = page ?? 1;
             ViewData["list"] = list.ToPagedList(pageNumber, 16);
             ViewData["q"] = q;
-            ViewData["type"] = type;
-            return View(filterViewModel);
+			ViewBag.Action = "Search";
+			return View(filterViewModel);
         }
-    }
+
+		[HttpGet]
+        [Route("/Home/Author/{slug}")]
+        public IActionResult Author(string slug,string?q, int? page, SearchFilterViewModel? filterViewModel)
+        {
+			//Lấy ra danh sách sản phẩm có author_slug chứa chuỗi slug
+			var list = new List<ProductViewModel>();
+			var products = _context.Products.ToList()
+				.Where(p => p.author_slug == slug)
+				.ToList();
+            if (products.Count == 0)
+            {
+                return NotFound();
+            }
+            products.ForEach(pd => list.Add(_mapper.Map<ProductViewModel>(pd)));
+            //Tạo filter nếu chưa có và thực hiện filter
+            if (filterViewModel is null)
+            {
+	            filterViewModel = new SearchFilterViewModel();
+            }
+            filterViewModel.Categories=ProductCategory.getArrayView().Select(
+                item => new CheckBoxItem
+                {
+                    Value = item.Value,
+                    Display = item.Key,
+                    IsChecked = false
+                }
+            ).ToList();
+            filterViewModel.min_price = 0;
+            filterViewModel.max_price = 0;
+            //Code phân trang
+            var pageNumber = page ?? 1;
+            ViewData["list"] = list.ToPagedList(pageNumber, 16);
+            ViewData["q"] = q;
+			ViewBag.Action = "Author";
+			ViewBag.Slug = slug;
+			return View("Search",filterViewModel);
+        }
+
+        [HttpGet]
+        public IActionResult HotDeal(string?q, int? page, SearchFilterViewModel? filterViewModel)
+        {
+			//Truy vấn sản phẩm theo giảm dần discount_rate
+			var list = new List<ProductViewModel>();
+	        var products = _context.Products.ToList()
+		        .Where(p => p.quantity >0)
+				.OrderByDescending(p => p.discount_rate)
+				.ToList();
+	        products.ForEach(pd => list.Add(_mapper.Map<ProductViewModel>(pd)));
+			//Tạo filter nếu chưa có và thực hiện filter
+			if (filterViewModel is null)
+			{
+				filterViewModel = new SearchFilterViewModel();
+			}
+			filterViewModel.Categories = new List<CheckBoxItem>();
+	        filterViewModel.Categories=ProductCategory.getArrayView().Select(
+		        item => new CheckBoxItem
+		        {
+			        Value = item.Value,
+			        Display = item.Key,
+			        IsChecked = false
+		        }
+	        ).ToList();
+	        filterViewModel.min_price = 0;
+	        filterViewModel.max_price = 0;
+	        //Code phân trang
+	        var pageNumber = page ?? 1;
+	        ViewData["list"] = list.ToPagedList(pageNumber, 16);
+	        ViewData["q"] = q;
+			ViewBag.Action = "HotDeal";
+			return View("Search",filterViewModel);
+        }
+
+        [HttpGet]
+        [Route("/Home/Collection/{slug?}")]
+        public IActionResult Collection(string? slug,string?q, int? page, SearchFilterViewModel? filterViewModel)
+        {
+	        //Lấy ra danh sách sản phẩm có author_slug chứa chuỗi slug
+	        var list = new List<ProductViewModel>();
+	        var products= _context.Products.ToList();
+            if (!string.IsNullOrEmpty(slug))
+	        {
+		        products = products
+			        .Where(p => p.collection_slug == slug)
+			        .ToList();
+	        }
+	        else
+	        {
+		        products = products
+			        .Where(p => p.collection_slug is not null)
+			        .ToList();
+	        }
+	        if (products.Count == 0)
+	        {
+		        return NotFound();
+	        }
+	        products.ForEach(pd => list.Add(_mapper.Map<ProductViewModel>(pd)));
+	        //Tạo filter nếu chưa có và thực hiện filter
+	        if (filterViewModel is null)
+	        {
+		        filterViewModel = new SearchFilterViewModel();
+	        }
+	        filterViewModel.Categories=ProductCategory.getArrayView().Select(
+		        item => new CheckBoxItem
+		        {
+			        Value = item.Value,
+			        Display = item.Key,
+			        IsChecked = false
+		        }
+	        ).ToList();
+	        filterViewModel.min_price = 0;
+	        filterViewModel.max_price = 0;
+	        //Code phân trang
+	        var pageNumber = page ?? 1;
+	        ViewData["list"] = list.ToPagedList(pageNumber, 16);
+	        ViewData["q"] = q;
+			ViewBag.Action = "Collection";
+			if (slug is not null)
+			{
+				ViewBag.Slug = slug;
+			}
+			else
+			{
+				ViewBag.Slug = "";
+			}
+			return View("Search",filterViewModel);
+        }
+
+		[HttpGet]
+		public IActionResult Filter(string?q, int? page, SearchFilterViewModel filterViewModel)
+		{
+			var list = new List<ProductViewModel>();
+			var products = _context.Products.ToList()
+				.Where(p => p.quantity >0)
+				.ToList();
+			products.ForEach(pd => list.Add(_mapper.Map<ProductViewModel>(pd)));
+			//Tạo filter nếu chưa có và thực hiện filter
+			for (int i = 0; i < filterViewModel.Categories.Count; i++)
+			{
+				if (filterViewModel.Categories[i].IsChecked)
+				{
+					list = list.Where(p => p.category == filterViewModel.Categories[i].Value
+								   && p.price <= filterViewModel.max_price
+								   && p.price >= filterViewModel.min_price).ToList();
+				}
+			}
+			//Code phân trang
+			var pageNumber = page ?? 1;
+			ViewData["list"] = list.ToPagedList(pageNumber, 16);
+			ViewData["q"] = q;
+			ViewBag.Action = "Filter";
+			return View("Search",filterViewModel);
+		}
+	}
 }

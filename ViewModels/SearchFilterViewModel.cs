@@ -1,5 +1,8 @@
-﻿namespace MangaStore.ViewModels
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+
+namespace MangaStore.ViewModels
 {
+    [ValidateNever]
     public class SearchFilterViewModel
     {
         public List<CheckBoxItem> Categories { get; set; }

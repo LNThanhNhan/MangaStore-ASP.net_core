@@ -1,1 +1,85 @@
-﻿@*
+﻿@using MangaStore.ViewModels
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+@model SearchFilterViewModel
+@{
+	string q =ViewData["q"] as string;
+	PagedList<ProductViewModel> list = ViewData["list"] as PagedList<ProductViewModel>;
+	string action = ViewBag.Action as string;
+}
+<form asp-controller="Home" asp-action="Search" method="get" asp-route-type="search">
+	<input name="q" type="search" value=@ViewBag.q />
+	<button type="submit">Tìm kiếm</button>
+</form>
+<table>
+	@foreach (var product in list)
+	{
+		<tr>
+			<td>
+				<a href="">
+					<img src="@product.image" alt="" width="100" height="150">
+				</a>
+			</td>
+			<td>@product.name</td>
+			<td>@product.priceVND</td>
+		</tr>
+	}
+</table>
+<form asp-controller="Home" asp-action="Filter" method="get" asp-route-q=@q >
+	@for (int i = 0; i < Model.Categories.Count; i++)
+	{
+		<div>
+			<label>
+				@Html.CheckBoxFor(m => m.Categories[i].IsChecked)
+				@Html.HiddenFor(m=>m.Categories[i].Display)
+				@Html.HiddenFor(m=>m.Categories[i].Value)
+				@*<input type="checkbox" asp-for="@Model.Categories[i]" value="@Model.Categories[i].IsChecked" />*@
+				@Model.Categories[i].Display
+			</label>
+		</div>
+	}
+	
+	Khoảng giá
+	<br>
+	Tối thiểu
+	<input type="number" asp-for=@Model.min_price id=""
+		   value=@Model.min_price>
+	Tối đa
+	<input type="number" asp-for=@Model.max_price id=""
+		   value=@Model.max_price>
+	<br>
+	<input type="submit" value="Lọc">
+</form>
+@if (action == "Author" || action == "Collection")
+{
+	@Html.PagedListPager((IPagedList)list, page => Url.Action(action,"Home",
+		new
+		{
+			slug=ViewBag.Slug,
+			page=page ,
+			q=ViewBag.q,
+			filterViewModel=Model
+		}),
+		new PagedListRenderOptions
+		{
+			LiElementClasses = new string[] { "page-item" },
+			PageClasses = new string[] { "page-link" }
+		})
+}
+else
+{
+	@Html.PagedListPager((IPagedList)list, page => Url.Action(action,"Home",
+		new
+		{
+			page=page ,
+			q=ViewBag.q,
+			filterViewModel=Model
+		}),
+		new PagedListRenderOptions
+		{
+			LiElementClasses = new string[] { "page-item" },
+			PageClasses = new string[] { "page-link" }
+		})
+}
