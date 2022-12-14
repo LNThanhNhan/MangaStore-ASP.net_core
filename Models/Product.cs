@@ -9,47 +9,6 @@ namespace MangaStore.Models
     [Index(nameof(slug), IsUnique = true)]
     public class Product
     {
-		/*public Product()
-		{
-		}
-		public Product(ProductViewModel pd)
-        {
-            name = pd.name;
-            slug = pd.slug;
-            image = pd.image;
-            description = pd.description;
-            author = pd.author;
-            author_slug = pd.author_slug;
-            list_price = pd.list_price;
-            price = pd.price;
-            discount_rate = pd.discount_rate;
-            quantity = pd.quantity;
-            publish_year = pd.publish_year;
-            size = pd.size;
-            collection = pd.collection;
-            collection_slug = pd.collection_slug;
-            category = pd.category;
-        }
-
-		public Product(EditProductViewModel pd)
-		{
-			name = pd.name;
-			slug = pd.slug;
-			image = pd.image;
-			description = pd.description;
-			author = pd.author;
-			author_slug = pd.author_slug;
-			list_price = pd.list_price;
-			price = pd.price;
-			discount_rate = pd.discount_rate;
-			quantity = pd.quantity;
-			publish_year = pd.publish_year;
-			size = pd.size;
-			collection = pd.collection;
-			collection_slug = pd.collection_slug;
-			category = pd.category;
-		}*/
-
 		[Key]
         public int id { get; set; }
 

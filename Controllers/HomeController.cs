@@ -1,6 +1,4 @@
-﻿using MangaStore.Models;
-using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+﻿using Microsoft.AspNetCore.Mvc;
 using MangaStore.Data;
 using MangaStore.ViewModels;
 using AutoMapper;
@@ -216,8 +214,8 @@ namespace MangaStore.Controllers
 				if (filterViewModel.Categories[i].IsChecked)
 				{
 					list = list.Where(p => p.category == filterViewModel.Categories[i].Value
-								   && p.price <= filterViewModel.max_price
-								   && p.price >= filterViewModel.min_price).ToList();
+			                       && p.price <= filterViewModel.max_price
+			                       && p.price >= filterViewModel.min_price).ToList();
 				}
 			}
 			//Code phân trang

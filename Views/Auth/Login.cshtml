@@ -1,0 +1,9 @@
+﻿@using MangaStore.ViewModels
+@model LoginViewModel
+<form asp-action="Login" asp-controller="Auth" method="Post">
+	Email
+	<input type="email" asp-for="email" required />
+	Mật khẩu
+	<input type="password" asp-for="password" required />
+	<input type="submit" value="Đăng nhập" />
+</form>

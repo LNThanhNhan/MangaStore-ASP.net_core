@@ -30,5 +30,19 @@ namespace MangaStore.Helpers
             slug = Regex.Replace(slug, "-+$", "");
             return slug;
         }
-    }
+
+		//Làm hàm hash mật khẩu với salt random để lưu vào database
+		public static string hash_password(string password)
+		{
+			string salt = BCrypt.Net.BCrypt.GenerateSalt();
+			string hash = BCrypt.Net.BCrypt.HashPassword(password, salt);
+			return hash;
+		}
+
+		//Làm hàm verify mật khẩu từ brcryp.net
+		public static bool verify_password(string password, string hash)
+		{
+			return BCrypt.Net.BCrypt.Verify(password, hash);
+		}
+	}
 }

@@ -1,0 +1,66 @@
+﻿@using MangaStore.ViewModels
+@model RegisterViewModel
+<div asp-validation-summary="All" class="text-danger"></div>
+<form method="POST" asp-controller="Auth" asp-action="Register">
+    <!-- Name -->
+    <div>
+	    <label asp-for="name">Họ và tên</label>
+
+        <input asp-for="name" class="block mt-1 w-full" type="text"   required autofocus />
+
+    </div>
+
+    <!-- Email Address -->
+    <div class="mt-4">
+	    <label asp-for="email" >Email</label>
+
+        <input asp-for="email" class="block mt-1 w-full" type="email" required />
+
+    </div>
+
+    <!-- Gender -->
+    <div class="mt-4">
+        Giới tính
+	    <input type="radio" asp-for="gender" value=1 required>
+	    <label asp-for="gender">Nam</label>
+
+	    <input type="radio" asp-for="gender" value=0>
+	    <label asp-for="gender">Nữ</label>
+
+    </div>
+    <!-- Username -->
+    <div>
+	    <label asp-for="username" >Nickname</label>
+
+        <input class="block mt-1 w-full" type="text" asp-for="username" required />
+
+    </div>
+
+    <!-- Password -->
+    <div class="mt-4">
+	    <label for="password" >Mật khẩu</label>
+
+        <input id="password" class="block mt-1 w-full"
+                      type="password"
+               asp-for="password"
+                      required/>
+
+    </div>
+
+    <!-- Confirm Password -->
+    <div class="mt-4">
+        <label asp-for="confirm_password">Xác nhận mật khẩu</label>
+	    <input class="block mt-1 w-full"
+	           type="password"
+	           asp-for="confirm_password" required/>
+
+    </div>
+
+    <div class="flex items-center justify-end mt-4">
+        
+
+        <button class="ml-4">
+            Đăng ký
+        </button>
+    </div>
+</form>
