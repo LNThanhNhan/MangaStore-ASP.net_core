@@ -44,5 +44,11 @@ namespace MangaStore.Helpers
 		{
 			return BCrypt.Net.BCrypt.Verify(password, hash);
 		}
+		
+		//Làm hàm format tiền tệ sang dạng VNĐ
+		public static string format_currency(int price)
+		{
+			return price.ToString("N0") + " đ";;
+		}
 	}
 }
