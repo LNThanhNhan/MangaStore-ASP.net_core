@@ -24,7 +24,8 @@ namespace MangaStore.Controllers
             _viewValidator = viewValidator;
             _editViewlValidator = editViewlValidator;
         }
-
+		
+        [HttpGet]
 		public IActionResult Index(int? page, string? q)
 		{
 			//Code thường

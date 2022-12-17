@@ -34,6 +34,20 @@ namespace MangaStore.Controllers
 			ViewData["list"] = list;
 			return View();
 		}
+		
+		//Làm hàm trà về ProductViewModel để hiển thị chi tiết sản phẩm
+		public IActionResult Detail(string slug)
+		{
+			var product = _context.Products
+				.Where(p => p.slug == slug)
+				.FirstOrDefault();
+			if (product == null)
+			{
+				return NotFound();
+			}
+			var productViewModel = _mapper.Map<ProductViewModel>(product);
+			return View(productViewModel);
+		}
 
         [HttpGet]
         public IActionResult Search(string?q, int? page, SearchFilterViewModel? filterViewModel)
@@ -43,7 +57,7 @@ namespace MangaStore.Controllers
             var products = _context.Products.ToList();
 			if (!string.IsNullOrEmpty(q))
 			{
-				products.Where(p => p.name.Contains(q, StringComparison.OrdinalIgnoreCase)).ToList();
+				products=products.Where(p => p.name.Contains(q, StringComparison.OrdinalIgnoreCase)).ToList();
 			}
             if (products.Count == 0)
             {

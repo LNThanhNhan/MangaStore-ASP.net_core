@@ -19,5 +19,7 @@ namespace MangaStore.Models
 		public string? phone { get; set; }
 		public string? address { get; set; }
 		public int? province { get; set; }
+		
+		public Cart cart { get; set; }
 	}
 }

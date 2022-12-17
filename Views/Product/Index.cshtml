@@ -3,7 +3,6 @@
 @using X.PagedList.Web.Common
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 
-<link href="/Content/PagedList.css" rel="stylesheet" type="text/css" />
 <form class="float-end" asp-action="Index" method="get">
 	<label>
 		Tìm kiếm:
@@ -11,7 +10,7 @@
 	<input type="search" name="q" value=@ViewBag.q >
 </form>
 <h1>Quản lý sản phẩm</h1>
-<a asp-asp-controller="product" asp-action="create">Thêm sản phẩm</a>
+<a asp-controller="product" asp-action="create">Thêm sản phẩm</a>
 <table class="table table-striped">
 	<tr>
 		<th>#</th>
@@ -39,12 +38,12 @@
 			<td>@product.category_name</td>
 			<td>@product.collection</td>
 			<td>
-				<a asp-asp-controller="product" asp-action="edit" asp-route-id=@product.id>
+				<a asp-controller="product" asp-action="edit" asp-route-id=@product.id>
 					Sửa
 				</a>
 			</td>
 			<td>
-				<form method="post" asp-asp-controller="product" asp-action="delete" asp-route-id=@product.id>
+				<form method="post" asp-controller="product" asp-action="delete" asp-route-id=@product.id>
 					<button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Xóa</button>
 				</form>
 			</td>

@@ -18,7 +18,7 @@
 	{
 		<tr>
 			<td>
-				<a href="">
+				<a asp-action="Detail" asp-controller="Home" asp-route-slug="@product.slug">
 					<img src="@product.image" alt="" width="100" height="150">
 				</a>
 			</td>
@@ -35,7 +35,6 @@
 				@Html.CheckBoxFor(m => m.Categories[i].IsChecked)
 				@Html.HiddenFor(m=>m.Categories[i].Display)
 				@Html.HiddenFor(m=>m.Categories[i].Value)
-				@*<input type="checkbox" asp-for="@Model.Categories[i]" value="@Model.Categories[i].IsChecked" />*@
 				@Model.Categories[i].Display
 			</label>
 		</div>

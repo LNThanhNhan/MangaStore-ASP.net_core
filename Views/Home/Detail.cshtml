@@ -1,0 +1,73 @@
+﻿@using MangaStore.ViewModels
+@model ProductViewModel
+
+@section css{
+    <link rel="stylesheet" href="~/css/jquery.toast.min.css">
+}
+<img src="@Model.image" width="200px" height="350px">
+<h2>@Model.name</h2>
+<h3>@Model.priceVND</h3>
+<form asp-controller="Cart" asp-action="AddToCart" method="post">
+    <input type="number" name="quantity" id="" value="1" min="1">      
+    <input type="hidden" name="productId" value="@Model.id">
+    <input type="submit" value="Thêm vào giỏ hàng">
+</form>
+@section js{
+    <script src="~/js/jquery.toast.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            /*khi nhấn vào nút thêm sản phẩm vào giỏ hàng thực hiện việc gửi form request bằng ajax
+            nếu thành công thì hiển thị thông báo thêm sản phẩm thành công bằng toast
+            nếu thất bại thì hiển thị thông báo thêm sản phẩm thất bại bằng toast*/
+            $('form').on('submit',function(e){
+                e.preventDefault();
+                var data = $(this).serialize();
+                $.ajax({
+                    url: '@Url.Action("AddToCart", "Cart")',
+                    type: 'POST',
+                    data: data,
+                    success: function(response) {
+                        console.log(response);
+                        if (response.success){
+                            $.toast({
+                                text: response.message, // Text that is to be shown in the toast
+                                heading: 'Thêm thành công', // Optional heading to be shown on the toast
+                                icon: 'success', // Type of toast icon
+                                showHideTransition: 'slide', // fade, slide or plain
+                                hideAfter: 3000, // false to make it sticky or number representing the miliseconds as time after which toast needs to be hidden
+                                stack: 2, // false if there should be only one toast at a time or a number representing the maximum number of toasts to be shown at a time
+                                position: 'top-center', // bottom-left or bottom-right or bottom-center or top-left or top-right or top-center or mid-center or an object representing the left, right, top, bottom values
+                            });
+                            //lấy thẻ span có class soluongmua và thay bằng giá trị của response.data vào
+                            //$('.soluongmua').html(response.data);
+                        }
+                        else{
+                            console.log(response);
+                            $.toast({
+                                text: response.message, // Text that is to be shown in the toast
+                                heading: 'Lỗi', // Optional heading to be shown on the toast
+                                icon: 'error', // Type of toast icon
+                                showHideTransition: 'slide', // fade, slide or plain
+                                hideAfter: 3000, // false to make it sticky or number representing the miliseconds as time after which toast needs to be hidden
+                                stack: 2, // false if there should be only one toast at a time or a number representing the maximum number of toasts to be shown at a time
+                                position: 'top-center', // bottom-left or bottom-right or bottom-center or top-left or top-right or top-center or mid-center or an object representing the left, right, top, bottom values
+                            });
+                        }
+                    },
+                    fail:function (response){
+                        if (typeof (response)=="object"){
+                            console.log("JSON");
+                            console.log(response);
+                        }
+                        else if(typeof (response)=="string"){
+                            document.write(data.responseText);
+                        }
+                        else {
+                            console.log(response);
+                        }
+                    }
+                })
+            });
+        });
+    </script>
+}

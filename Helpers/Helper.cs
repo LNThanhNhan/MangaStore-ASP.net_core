@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using MangaStore.Enums;
 
 namespace MangaStore.Helpers
 {
@@ -49,6 +50,12 @@ namespace MangaStore.Helpers
 		public static string format_currency(int price)
 		{
 			return price.ToString("N0") + " đ";;
+		}
+		
+		//Làm hàm lấy ra tên thể loại từ id
+		public static string category_name(int category)
+		{
+			return ProductCategory.getArrayView().FirstOrDefault(x => x.Value == category).Key;
 		}
 	}
 }

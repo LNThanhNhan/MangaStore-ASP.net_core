@@ -64,5 +64,7 @@ namespace MangaStore.Models
 
         [Required]
         public int category { get; set; }
+        
+        public List<CartDetail> cart_details { get; set; }
     }
 }

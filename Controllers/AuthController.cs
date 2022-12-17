@@ -6,6 +6,7 @@ using MangaStore.Helpers;
 using MangaStore.Models;
 using MangaStore.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace MangaStore.Controllers
 {
@@ -20,7 +21,7 @@ namespace MangaStore.Controllers
 		}
 		
 		[HttpGet]
-		[Route("login")]
+		[Route("login",Name = "login")]
 		public IActionResult Login()
 		{
 			return View();
@@ -40,10 +41,18 @@ namespace MangaStore.Controllers
 					if (Helper.verify_password(loginView.password,account.password))
 					{
 						//Khởi tạo session mới và gán giá trị id của account vào session
-						HttpContext.Session.SetInt32("id", account.id);
-						ViewBag.name = account.user.name;
-						ViewBag.id = HttpContext.Session.GetInt32("id");
-						return View("Success");
+						HttpContext.Session.SetInt32("account_id", account.id);
+						if (account.role == 1)
+						{
+							HttpContext.Session.SetString("role", "admin");
+						}
+						else if (account.role == 0)
+						{
+							HttpContext.Session.SetString("role", "user");
+						}
+						ViewBag.name = account.username;
+						//ViewBag.id = HttpContext.Session.GetInt32("account_id");
+						return RedirectToAction("Index", "Home");
 					}
 					//thêm error vào model state và trả lại view
 					ModelState.AddModelError("email", "Email hoặc mật khẩu không hợp lệ");
@@ -81,37 +90,39 @@ namespace MangaStore.Controllers
 				};
 				_context.Accounts.Add(account_db);
 				_context.SaveChanges();
-				//lấy ra account từ db có email giống với account
-				//var account_db = _context.Accounts.FirstOrDefault(a => a.email.Equals(account.email));
+				//Tạo user mới từ account
 				var user = new User
 				{
 					name=registerView.name,
 					gender = registerView.gender,
-					account_id = account_db.id,
-					account = account_db
+					account_id = account_db.id
 				};
 				_context.Users.Add(user);
 				_context.SaveChanges();
+				//Tạo cart mới từ user
+				var cart = new Cart
+				{
+					user_id = user.id,
+				};
+				_context.Carts.Add(cart);
+				_context.SaveChanges();
 				//Khởi tạo session mới và gán giá trị id của account vào session
-				HttpContext.Session.SetInt32("id", account_db.id);
+				HttpContext.Session.SetInt32("account_id", account_db.id);
 				ViewBag.name = user.name;
-				ViewBag.id = HttpContext.Session.GetInt32("id");
-				return View("Success");
+				ViewBag.id = HttpContext.Session.GetInt32("account_id");
+				return RedirectToAction("Index", "Home");
 			}
 			ModelState.Clear();
 			result.AddToModelState(this.ModelState);
 			return View(registerView);
 		}
-
-		[HttpGet]
-		[Route("test")]
-		public IActionResult Test()
+		
+		[HttpPost]
+		[Route("logout")]
+		public IActionResult Logout()
 		{
-			var user= _context.Users.FirstOrDefault(a=>a.gender==1);
-			var account = user.account;
-			ViewBag.name = account.username;
-			ViewBag.id = account.id;
-			return View("Success");
+			HttpContext.Session.Clear();
+			return RedirectToAction("Index", "Home");
 		}
 	}
 }

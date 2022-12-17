@@ -1,5 +1,6 @@
 ﻿using FluentValidation.AspNetCore;
 using MangaStore.Data;
+using MangaStore.Middlewares;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -47,6 +48,10 @@ app.UseAuthorization();
 
 app.UseSession();
 
+//Thêm middlware để kiểm tra với route có area = user 
+//thì sẽ kiểm tra session có tồn tại hay không
+//Nếu chưa thì sẽ điều hướng sang route login
+app.UseMiddleware<AuthMiddleware>();
 app.MapControllerRoute(
 	name: "default",
 	pattern: "{controller=Home}/{action=Index}/{id?}");
