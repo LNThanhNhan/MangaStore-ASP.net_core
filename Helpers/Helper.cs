@@ -47,7 +47,7 @@ namespace MangaStore.Helpers
 		}
 		
 		//Làm hàm format tiền tệ sang dạng VNĐ
-		public static string format_currency(int price)
+		public static string format_VND(long price)
 		{
 			return price.ToString("N0") + " đ";;
 		}
@@ -57,5 +57,38 @@ namespace MangaStore.Helpers
 		{
 			return ProductCategory.getArrayView().FirstOrDefault(x => x.Value == category).Key;
 		}
-	}
+		
+		//Làm hàm lấy ra tên tỉnh thành phố từ int province 
+		//truyền vào, và nguồn là lấy từ class Province 
+		//và lấy từ hàm getArrayView() trong class đó
+		public static string province_name(int province)
+		{
+			return Province.getArrayView().FirstOrDefault(x => x.Value == province).Key;
+		}
+
+		//Làm hàm lấy ra tên phương thức thanh toán từ int method 
+		//truyền vào, và nguồn là lấy từ class OrderPaymentMethod 
+		//và lấy từ hàm getArrayView() trong class đó
+		public static string payment_method_name(int method)
+		{
+			return OrderPaymentMethod.getArrayView().FirstOrDefault(x => x.Value == method).Key;
+		}
+		
+		//Làm hàm lấy ra tên phương thức thanh toán từ int method 
+		//truyền vào, và nguồn là lấy từ class OrderPaymentMethod 
+		//và lấy từ hàm getShortArrayView() trong class đó
+		public static string payment_method_short_name(int method)
+		{
+			return OrderPaymentMethod.getShortArrayView().FirstOrDefault(x => x.Value == method).Key;
+		}
+		
+		//Làm hàm lấy ra tên trạng thái đơn hàng từ int status
+		//truyền vào, và nguồn là lấy từ class OrderStatus
+		//và lấy từ hàm getArrayView() trong class đó
+		public static string order_status_name(int status)
+		{
+			return OrderStatus.getArrayView().FirstOrDefault(x => x.Value == status).Key;
+		}
+		
+    }
 }

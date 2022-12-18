@@ -16,7 +16,7 @@
                    @* @auth()
                         <a href="{{ route('user.profile.info') }}" class="link">{{auth()->user()->username}}</a>
                     @else*@
-                        <a href="{{ route('register') }}" class="link" title="Dang Ky">ĐĂNG KÝ</a><span class="sep">|</span><a href="{{ route('login') }}" class="link" title="Dang Nhap">ĐĂNG NHẬP</a>
+                        <a href="{{ route('register') }}" class="link" title="Dang Ky">ĐĂNG KÝ</a><span class="sep">|</span><a href="./login" class="link" title="Dang Nhap">ĐĂNG NHẬP</a>
                    @* @endauth*@
                 </div>
             </td>
@@ -57,8 +57,9 @@
             <td class="tdcart">
                 <div class="cart">
                     <label>
-                        <a href="{{ route('user.cart.index')}}"></a>
+                        <a asp-controller="Cart" asp-action="Index">
                         <i class="fa-solid fa-cart-shopping"></i>
+                        </a>
                     </label>
                     <div class="spansl">
                        @* @if(auth()->check() && auth()->user()->role === 0)

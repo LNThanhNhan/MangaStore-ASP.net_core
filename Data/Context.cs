@@ -12,6 +12,7 @@ namespace MangaStore.Data
 		public DbSet<User> Users { get; set; }
 		public DbSet<Cart> Carts { get; set; }
 		public DbSet<CartDetail> CartDetails { get; set; }
+		public DbSet<Sample> Sample { get; set; }
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.Entity<User>()
@@ -52,6 +53,16 @@ namespace MangaStore.Data
 				.HasMany<CartDetail>(p => p.cart_details)
 				.WithOne(cd => cd.product)
 				.HasForeignKey(cd => cd.product_id)
+				.HasPrincipalKey(p => p.id)
+				.OnDelete(DeleteBehavior.Cascade);
+			
+			//Thiết lập quan hệ 1:n giữa product và sample
+			//và set delete behavior là casecade
+			//tức là khi xóa product thì sample cũng bị xóa
+			modelBuilder.Entity<Product>()
+				.HasMany<Sample>(p => p.samples)
+				.WithOne(s => s.product)
+				.HasForeignKey(s => s.product_id)
 				.HasPrincipalKey(p => p.id)
 				.OnDelete(DeleteBehavior.Cascade);
 		}

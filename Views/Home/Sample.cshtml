@@ -1,0 +1,13 @@
+﻿@model List<Sample>
+@section css{
+    <link rel="stylesheet" href="~/css/XemThu.css">
+}
+@foreach(var sample in Model)
+{
+    <div class="d-flex justify-content-center">
+        <img class="img-fluid" src="@sample.image" alt="Truyện xem thử">
+    </div>
+}
+<div class="d-flex justify-content-center align-items-center mb-4 mt-4">
+    <button class="btn-55"><a asp-controller="Home" asp-action="Detail" asp-route-slug="@ViewBag.slug"><span>Mua ngay</span></a></button>
+</div>

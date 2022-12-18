@@ -3,6 +3,8 @@ using MangaStore.Data;
 using MangaStore.ViewModels;
 using AutoMapper;
 using MangaStore.Enums;
+using MangaStore.Models;
+using Microsoft.EntityFrameworkCore;
 using X.PagedList;
 
 namespace MangaStore.Controllers
@@ -39,6 +41,7 @@ namespace MangaStore.Controllers
 		public IActionResult Detail(string slug)
 		{
 			var product = _context.Products
+				.Include(s=>s.samples)
 				.Where(p => p.slug == slug)
 				.FirstOrDefault();
 			if (product == null)
@@ -46,6 +49,14 @@ namespace MangaStore.Controllers
 				return NotFound();
 			}
 			var productViewModel = _mapper.Map<ProductViewModel>(product);
+			if(product.samples.Count != 0)
+			{
+				ViewBag.Sample = "Có";
+			}
+			else
+			{
+				ViewBag.Sample = "Không";
+			}
 			return View(productViewModel);
 		}
 
@@ -238,6 +249,20 @@ namespace MangaStore.Controllers
 			ViewData["q"] = q;
 			ViewBag.Action = "Filter";
 			return View("Search",filterViewModel);
+		}
+		
+		[HttpGet]
+		public IActionResult Sample(int id)
+		{
+			//lấy ra product có id tương ứng
+			var product = _context.Products.Include(p=>p.samples).FirstOrDefault(p => p.id == id);
+			//kiểm tra nếu không tồn tại sample thì tạo list mới
+			if(product.samples==null)
+			{
+				product.samples = new List<Sample>();
+			}
+			ViewBag.slug = product.slug;
+			return View(product.samples);
 		}
 	}
 }

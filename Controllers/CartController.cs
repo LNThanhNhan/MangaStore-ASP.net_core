@@ -80,12 +80,49 @@ namespace MangaStore.Controllers
                 .ThenInclude(cart=>cart.cart_details)
                 .ThenInclude(cart_detail=>cart_detail.product)
                 .FirstOrDefault(u=>u.account_id==accountID);
+            long total = user.cart.cart_details.Sum(cart_detail=>cart_detail.product.price*cart_detail.quantity);
             Cart cart = user.cart;
-            /*CartViewModel cartViewModel = new CartViewModel();
-            cartViewModel.cart = cart;
-            cartViewModel.cart_details = cart.cart_details;*/
-            //return View(cartViewModel);
-            return View();
+            List<CartDetail> cartList = cart.cart_details.ToList();
+            ViewBag.cart_total=total;
+            return View(cartList);
+        }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        //Cập nhật số lượng của từng sản phẩm trong giỏ hàng
+        public IActionResult UpdateCart(int[]arr)
+        {
+            int accountID = (int)HttpContext.Session.GetInt32("account_id");
+            User user = _context.Users
+                .Include(user=>user.cart)
+                .ThenInclude(cart=>cart.cart_details)
+                .ThenInclude(cart_detail=>cart_detail.product)
+                .FirstOrDefault(u=>u.account_id==accountID);
+            Cart cart = user.cart;
+            CartDetail[] cart_details = cart.cart_details.ToArray();
+            for(int i=0;i<cart_details.Length;i++)
+            {
+                cart_details[i].quantity = arr[i];
+                _context.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
+        
+        [HttpGet]
+        //hàm DeleteCartItem dùng để xóa 1 sản phẩm trong giỏ hàng
+        public IActionResult DeleteCartItem(int id)
+        {
+            int accountID = (int)HttpContext.Session.GetInt32("account_id");
+            User user = _context.Users
+                .Include(user=>user.cart)
+                .ThenInclude(cart=>cart.cart_details)
+                .ThenInclude(cart_detail=>cart_detail.product)
+                .FirstOrDefault(u=>u.account_id==accountID);
+            Cart cart = user.cart;
+            CartDetail cart_detail = _context.CartDetails.FirstOrDefault(cart_detail=>cart_detail.product_id==id);
+            _context.CartDetails.Remove(cart_detail);
+            _context.SaveChanges();
+            return RedirectToAction("Index","Cart");
         }
     }
 }
