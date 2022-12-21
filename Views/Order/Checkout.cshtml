@@ -1,0 +1,121 @@
+﻿@using MangaStore.ViewModels
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using MangaStore.Helpers
+@model OrderViewModel
+@{
+    Dictionary<string,int> provinces=ViewData["provinces"] as Dictionary<string,int>;
+    Dictionary<string,int> payments=ViewData["payments"] as Dictionary<string,int>;
+    Dictionary<string,long> shipping_fee=ViewData["shipping_fee"] as Dictionary<string,long>;
+    List<CartDetail>cart_details =ViewData["cart_details"] as List<CartDetail>;
+    long? total_price_data=ViewData["total_price"] as long?;
+    long total_price=total_price_data==null?0:(long)total_price_data;
+    long? cart_shipping_fee_data=ViewData["cart_shipping_fee"] as long?;
+    long cart_shipping_fee=cart_shipping_fee_data==null?0:(long)cart_shipping_fee_data;
+    User user=ViewData["user"] as User;
+}
+<div style="display:flex">
+    <div>
+        @if (TempData["error"] is not null)
+        {
+            <div class="alert alert-danger">
+                <p>@TempData["error"]</p>
+            </div>
+        }
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <form asp-controller="Order" asp-action="Checkout" method="POST">
+            Họ tên <input type="text" asp-for="name" value="@user.name">
+            <br>
+            Email <input type="text" asp-for="email" value="@user.account.email">
+            <br>
+            Số điện thoại <input type="text" asp-for="phone" value="@user.phone">
+            <br>
+            <label for="">Tỉnh/Thành phố</label>
+            <select asp-for="province">
+                <option value="0" selected>-- Chọn tỉnh/thành phố --</option>
+                @if (provinces is not null)
+                {
+                    foreach (var province in provinces)
+                    {
+                        <option value="@province.Value">@province.Key</option>
+                    }
+                }
+            </select>
+            <br>
+            Địa chỉ <input type="text" asp-for="address" value="@user.address">
+            <br>
+            Phương thức thanh toán <br>
+            <input type="radio" asp-for="payment_method" value="1" checked> Thanh toán khi nhận hàng (COD) <br>
+            <input type="radio" asp-for="payment_method" value="2"> Chuyển khoản qua ngân hàng <br>
+            <input type="radio" asp-for="payment_method" value="3"> Thanh toán qua ví điện tử ZaloPay <br>
+            <input type="submit" value="Hoàn tất đơn hàng">
+        </form>
+    </div>
+    <div style="margin-left: 200px">
+        <table >
+            <tbody>
+            @if (cart_details is not null)
+            {
+                @foreach (var cart_detail in cart_details)
+                {
+                    <tr>
+                        <td>
+                            <img src="@cart_detail.product.image" alt="Ảnh minh họa sản phẩm" width="100" height="150">
+                        </td>
+                        <td>
+                            <p>@cart_detail.product.name</p>
+                        </td>
+                        <td>@Helper.format_VND(cart_detail.product.price)</td>
+                        <td >
+                            <p style="margin: 10px">@cart_detail.quantity </p>
+                        </td>
+                        <td>@Helper.format_VND(cart_detail.product.price * cart_detail.quantity)</td>
+                    </tr>
+                }
+            }
+            </tbody>
+        </table>
+        <label for="">Tạm tính: </label>
+        <span>@Helper.format_VND(total_price)</span>
+        <br>
+        <label for="">Phí vận chuyển: </label>
+        @if(user.province is not null && (Helper.province_name(user.province) == "Hà Nội" || Helper.province_name(user.province)== "Hồ Chí Minh"))
+        {
+            <span id="shipping-fee">@Helper.format_VND(shipping_fee["hn_hcm"]) </span>
+        }
+        else if(user.province is null)
+        {
+            <span id="shipping-fee">___</span>
+        }
+        else
+        {
+            <span id="shipping-fee">@Helper.format_VND(shipping_fee["tinh_thanh"])</span>
+        }
+        <br>
+        <label for="">Tổng cộng: </label>
+        <span id="total_price">@Helper.format_VND(total_price + cart_shipping_fee)</span>
+    </div>
+</div>
+@section js{
+        <script>
+/*{{--thêm script để tính tổng tiền khi chọn tỉnh/thành phố--}}
+{{--khi thay đổi tỉnh thành phố thì sẽ tính lại tổng tiền theo value của id="total_price"--}}
+{{--nếu tỉnh thành phố là Hà Nội hoặc Hồ Chí Minh thì lấy value + 15000 rồi format lại theo tiền Việt Nam--}}
+{{--nếu tỉnh thành phố là null thì lấy value + 0 rồi format lại theo tiền Việt Nam--}}
+{{--nếu tỉnh thành phố là tỉnh khác thì lấy value + 30000 rồi format lại theo tiền Việt Nam--}}*/
+    $(document).ready(function () {
+        $('select[name="province"]').change(function () {
+            let province = $(this).val();
+            if (province === '0') {
+                $('#total_price').text("@Helper.format(total_price) đ");
+                $('#shipping-fee').text('___');
+            } else if (province === "@Helper.province_id("Hồ Chí Minh")" || province === "@Helper.province_id(("Hà Nội"))" ) {
+                $('#total_price').text("@Helper.format(total_price + shipping_fee["hn_hcm"]) đ");
+                $('#shipping-fee').text('@Helper.format(shipping_fee["hn_hcm"]) đ');
+            }else {
+                $('#total_price').text("@Helper.format(total_price + shipping_fee["tinh_thanh"]) đ");
+                $('#shipping-fee').text('@Helper.format(shipping_fee["tinh_thanh"]) đ');
+            };
+        });
+    });
+</script>
+}

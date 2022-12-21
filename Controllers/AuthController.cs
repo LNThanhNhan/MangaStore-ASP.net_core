@@ -2,6 +2,7 @@
 using FluentValidation.AspNetCore;
 using FluentValidation.Results;
 using MangaStore.Data;
+using MangaStore.Enums;
 using MangaStore.Helpers;
 using MangaStore.Models;
 using MangaStore.ViewModels;
@@ -42,17 +43,18 @@ namespace MangaStore.Controllers
 					{
 						//Khởi tạo session mới và gán giá trị id của account vào session
 						HttpContext.Session.SetInt32("account_id", account.id);
-						if (account.role == 1)
+						if (account.role == AccountRole.ADMIN)
 						{
-							HttpContext.Session.SetString("role", "admin");
+							HttpContext.Session.SetInt32("role", AccountRole.ADMIN);
 						}
-						else if (account.role == 0)
+						else if (account.role == AccountRole.USER)
 						{
-							HttpContext.Session.SetString("role", "user");
+							HttpContext.Session.SetInt32("role", AccountRole.USER);
+							RedirectToAction("Index", "Home");
 						}
 						ViewBag.name = account.username;
 						//ViewBag.id = HttpContext.Session.GetInt32("account_id");
-						return RedirectToAction("Index", "Home");
+						return RedirectToAction("Index", "User");
 					}
 					//thêm error vào model state và trả lại view
 					ModelState.AddModelError("email", "Email hoặc mật khẩu không hợp lệ");

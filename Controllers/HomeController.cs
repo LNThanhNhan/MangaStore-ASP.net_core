@@ -232,15 +232,45 @@ namespace MangaStore.Controllers
 			var products = _context.Products.ToList()
 				.Where(p => p.quantity >0)
 				.ToList();
-			products.ForEach(pd => list.Add(_mapper.Map<ProductViewModel>(pd)));
-			//Tạo filter nếu chưa có và thực hiện filter
-			for (int i = 0; i < filterViewModel.Categories.Count; i++)
+			//Nếu không chọn category nào thì lọc theo giá
+			if (filterViewModel.Categories.All(c => c.IsChecked == false))
 			{
-				if (filterViewModel.Categories[i].IsChecked)
+				products.ForEach(pd => list.Add(_mapper.Map<ProductViewModel>(pd)));
+				list = list.Where(p => p.price <= filterViewModel.max_price
+				                       && p.price >= filterViewModel.min_price).ToList();
+			}
+			else
+			{
+				//Check điều kiện của giá
+				if (filterViewModel.min_price<0 )
 				{
-					list = list.Where(p => p.category == filterViewModel.Categories[i].Value
-			                       && p.price <= filterViewModel.max_price
-			                       && p.price >= filterViewModel.min_price).ToList();
+					filterViewModel.min_price = 0;
+				}
+				if(filterViewModel.max_price==0 ||filterViewModel.max_price<0)
+				{
+					filterViewModel.max_price = 1000000;
+				}
+				if(filterViewModel.min_price>filterViewModel.max_price)
+				{
+					int temp = filterViewModel.min_price;
+					filterViewModel.min_price = filterViewModel.max_price;
+					filterViewModel.max_price = temp;
+				}
+				//Tạo filter nếu chưa có và thực hiện filter
+				for (int i = 0; i < filterViewModel.Categories.Count; i++)
+				{
+					if (filterViewModel.Categories[i].IsChecked)
+					{
+						products.ForEach(pd =>
+						{
+							if (pd.category == filterViewModel.Categories[i].Value
+							    && pd.price <= filterViewModel.max_price
+							    && pd.price >= filterViewModel.min_price)
+							{
+								list.Add(_mapper.Map<ProductViewModel>(pd));
+							}
+						});
+					}
 				}
 			}
 			//Code phân trang

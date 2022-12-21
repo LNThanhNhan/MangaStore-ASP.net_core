@@ -1,8 +1,8 @@
 ﻿@using MangaStore.Helpers
 @model List<CartDetail>
-@section css{
+@*@section css{
     <link rel="stylesheet" href="~/css/jquery.toast.min.css">
-}
+}*@
 <form asp-controller="Cart" asp-action="UpdateCart" method="post">
     <table>
         <tr>
@@ -31,7 +31,7 @@
     </table>
     <input type="submit" value="Cập nhật giỏ hàng">
 </form>
-
-@section js{
+<a asp-controller="Order" asp-action="Checkout">Thanh toán</a>
+@*@section js{
     <script src="~/js/jquery.toast.min.js"></script>
-}
+}*@

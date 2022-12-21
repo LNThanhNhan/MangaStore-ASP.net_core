@@ -1,0 +1,28 @@
+﻿@model User
+@{
+    Dictionary<string, int> provinces=ViewData["provinces"] as Dictionary<string, int>;
+}
+@if(TempData["message"]!=null)
+{
+    <div class="alert alert-success">
+        @TempData["message"]
+    </div>
+}
+<h3>@Model.name</h3>
+<h3>@Model.account.email</h3>
+<h3>@Model.phone</h3>
+<h3>@Model.address</h3>
+<select asp-for="province" id="province">
+    <option value="">Chọn tỉnh/thành phố</option>
+    @foreach (var item in provinces)
+    {
+        <option value="@item.Value">@item.Key</option>
+    }
+</select>
+<br>
+<input type="radio" asp-for="gender" value="1"> Nam
+<input type="radio" asp-for="gender" value="0"> Nữ
+<br>
+<form asp-controller="Auth" asp-action="Logout" method="post">
+    <button type="submit">Đăng xuất</button>
+</form>

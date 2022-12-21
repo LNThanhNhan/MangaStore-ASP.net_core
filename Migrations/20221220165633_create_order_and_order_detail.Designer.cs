@@ -4,6 +4,7 @@ using MangaStore.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MangaStore.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20221220165633_create_order_and_order_detail")]
+    partial class create_order_and_order_detail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -105,7 +107,7 @@ namespace MangaStore.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("delivery_date")
+                    b.Property<DateTime>("delivery_date")
                         .HasColumnType("datetime2");
 
                     b.Property<long>("delivery_fee")
@@ -147,9 +149,12 @@ namespace MangaStore.Migrations
                     b.Property<int>("user_id")
                         .HasColumnType("int");
 
+                    b.Property<int>("userid")
+                        .HasColumnType("int");
+
                     b.HasKey("id");
 
-                    b.HasIndex("user_id");
+                    b.HasIndex("userid");
 
                     b.ToTable("Orders");
                 });
@@ -348,8 +353,8 @@ namespace MangaStore.Migrations
             modelBuilder.Entity("MangaStore.Models.Order", b =>
                 {
                     b.HasOne("MangaStore.Models.User", "user")
-                        .WithMany("orders")
-                        .HasForeignKey("user_id")
+                        .WithMany()
+                        .HasForeignKey("userid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -426,8 +431,6 @@ namespace MangaStore.Migrations
                 {
                     b.Navigation("cart")
                         .IsRequired();
-
-                    b.Navigation("orders");
                 });
 #pragma warning restore 612, 618
         }

@@ -2,12 +2,12 @@
 
 public class ShippingFee
 {
-    public const int HN_HCM = 20000;
-    public const int OTHER = 35000;
+    public const long HN_HCM = 20000;
+    public const long OTHER = 35000;
     
-    public static Dictionary<string,int> getArray()
+    public static Dictionary<string,long> getArray()
     {
-        return new Dictionary<string,int>
+        return new Dictionary<string,long>
         {
             {"hn_hcm",HN_HCM},
             {"tinh_thanh",OTHER}

@@ -49,7 +49,13 @@ namespace MangaStore.Helpers
 		//Làm hàm format tiền tệ sang dạng VNĐ
 		public static string format_VND(long price)
 		{
-			return price.ToString("N0") + " đ";;
+			return price.ToString("N0") + " đ";
+		}
+		
+		//Làm hàm format tiền tệ nhưng không có đơn vị tiền tệ
+		public static string format(long price)
+		{
+			return price.ToString("N0");
 		}
 		
 		//Làm hàm lấy ra tên thể loại từ id
@@ -61,10 +67,19 @@ namespace MangaStore.Helpers
 		//Làm hàm lấy ra tên tỉnh thành phố từ int province 
 		//truyền vào, và nguồn là lấy từ class Province 
 		//và lấy từ hàm getArrayView() trong class đó
-		public static string province_name(int province)
+		public static string province_name(int? province)
 		{
 			return Province.getArrayView().FirstOrDefault(x => x.Value == province).Key;
 		}
+		
+		//Hàm lấy ra index của tỉnh thành phố từ tên string key 
+		//truyền vào, và nguồn là lấy từ class Province
+		//và lấy từ hàm getArrayView() trong class đó
+		public static int province_id(string key)
+		{
+			return Province.getArrayView().FirstOrDefault(x => x.Key == key).Value;
+		}
+		
 
 		//Làm hàm lấy ra tên phương thức thanh toán từ int method 
 		//truyền vào, và nguồn là lấy từ class OrderPaymentMethod 

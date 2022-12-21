@@ -4,7 +4,7 @@ using MangaStore.Data;
 using MangaStore.Enums;
 using MangaStore.ViewModels;
 
-namespace MangaStore.Validator
+namespace MangaStore.Validators
 {
     public class ProductViewValidator: AbstractValidator<ProductViewModel>
     {

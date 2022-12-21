@@ -67,5 +67,7 @@ namespace MangaStore.Models
         
         public List<CartDetail> cart_details { get; set; }
         public List<Sample> samples { get; set; }
+        
+        public List<OrderDetail> order_details { get; set; }
     }
 }

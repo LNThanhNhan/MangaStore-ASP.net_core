@@ -21,5 +21,6 @@ namespace MangaStore.Models
 		public int? province { get; set; }
 		
 		public Cart cart { get; set; }
+		public List<Order> orders { get; set; }
 	}
 }

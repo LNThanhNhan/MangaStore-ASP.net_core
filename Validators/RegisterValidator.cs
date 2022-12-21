@@ -16,7 +16,7 @@ namespace MangaStore.Validators
 				.NotEmpty().WithMessage("Email không được để trống")
 				.EmailAddress().WithMessage("Email không đúng định dạng")
 				.Must(UniqueEmail).WithMessage("Email đã tồn tại")
-				.MaximumLength(100).WithMessage("Họ tên không được quá 100 ký tự");
+				.MaximumLength(100).WithMessage("Email không được quá 100 ký tự");
 			
 			RuleFor(x => x.username)
 				.NotEmpty().WithMessage("Nickname không được để trống")

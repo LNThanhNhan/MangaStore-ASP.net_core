@@ -21,7 +21,7 @@ namespace MangaStore.Models
 		[Required]
 		[DefaultValue(0)]
 		public int role { get ; set; }
-
+		
 		public User user { get; set; }
 	}
 }
