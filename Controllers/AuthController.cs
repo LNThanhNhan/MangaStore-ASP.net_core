@@ -45,6 +45,7 @@ namespace MangaStore.Controllers
 						{
 							//Khởi tạo session mới và gán giá trị id của account vào session
 							HttpContext.Session.SetInt32("account_id", account.id);
+							HttpContext.Session.SetString("username", account.username);
 							if (account.role == AccountRole.ADMIN)
 							{
 								HttpContext.Session.SetInt32("role", AccountRole.ADMIN);

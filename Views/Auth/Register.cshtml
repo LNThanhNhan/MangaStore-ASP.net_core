@@ -1,7 +1,110 @@
 ﻿@using MangaStore.ViewModels
 @model RegisterViewModel
+@section css{
+    <link rel="stylesheet" href="~/css/DangKy.css" />
+}
+<div class="containerDangKy">
+	<partial name="Header"/>
+	<div class="contentDangKy">
+        <table class="tbcontentDangKy">
+            <tr>
+                <td class="tdlbTaoTK">
+                    <div class="lbtaotk">
+                        <label for="lbtaotk">
+                            TẠO TÀI KHOẢN
+                        </label>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="divhr"><hr class="hr"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="formdk">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <form method="POST" asp-controller="Auth" asp-action="Register">
+                        <table class="tbformdangky">
+                            <tr>
+                                <td colspan="2" class="tdhoten">
+                                    <div class="texthoten">
+                                        <input type="text" asp-for="name" placeholder="Họ tên" class="inputhoten">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="tdemailuser">
+                                    <div class="emailuser">
+                                        <input type="email" asp-for="email" placeholder="Email" class="inputemail">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdgender">
+                                    <div class="lbgender">
+                                        <label for="gender">
+                                            Giới tính
+                                        </label>
+                                    </div>
+                                </td>
+                                <td class="tdradio">
+                                    <div class="radiogender">
+                                        <input type="radio" id="gtnam" asp-for="gender" value="1">Nam
+                                        <input type="radio" id="gtnu" asp-for="gender" value="0">Nữ
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="tdtendn">
+                                    <div class="tendn">
+                                        <input type="text" asp-for="username" placeholder="Tên đăng nhập" class="inputtendn">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="tdmk">
+                                    <div class="matkhau">
+                                        <input type="password" asp-for="password" placeholder="Mật khẩu" class="inputmk">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="tdnhaplai">
+                                    <div class="nhaplaimk">
+                                        <input type="password" asp-for="confirm_password" placeholder="Nhập lại mật khẩu" class="inputnhaplai">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="tdbtndn">
+                                    <div class="btndangky">
+                                        <button type="submit" class="btnsignin">
+                                            ĐĂNG KÝ
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="trong"></td>
+                                <td class="tddangnhap">
+                                    <div class="dangnhap">
+                                        <a href="/login" class="hrefdangnhap">
+                                            Đăng nhập
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>    
+	<partial name="Footer"/>
+</div>
 <div asp-validation-summary="All" class="text-danger"></div>
-<form method="POST" asp-controller="Auth" asp-action="Register">
+@*<form method="POST" asp-controller="Auth" asp-action="Register">
     <!-- Name -->
     <div>
 	    <label asp-for="name">Họ và tên</label>
@@ -14,12 +117,12 @@
     <div class="mt-4">
 	    <label asp-for="email" >Email</label>
 
-        <input asp-for="email" class="block mt-1 w-full" type="email" required />
+        <input asp-for="email"  type="email" required />
 
     </div>
 
     <!-- Gender -->
-    <div class="mt-4">
+    <div >
         Giới tính
 	    <input type="radio" asp-for="gender" value=1 required>
 	    <label asp-for="gender">Nam</label>
@@ -63,4 +166,4 @@
             Đăng ký
         </button>
     </div>
-</form>
+</form>*@

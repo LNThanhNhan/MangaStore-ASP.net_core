@@ -6,6 +6,7 @@ using MangaStore.Enums;
 using MangaStore.Models;
 using MangaStore.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace MangaStore.Controllers;
@@ -18,6 +19,17 @@ public class OrderController:Controller
     {
         _context = context;
         _validator = validator;
+    }
+    
+    [HttpGet]
+    public IActionResult Index()
+    {
+        var orders = _context.Orders
+            .Include(x => x.order_details)
+            .ThenInclude(x => x.product)
+            .OrderByDescending(x => x.order_date)
+            .ToList();
+        return View(orders);
     }
     
     [HttpGet]
@@ -64,7 +76,8 @@ public class OrderController:Controller
         {
             ModelState.Clear();
             result.AddToModelState(this.ModelState);
-            return View(orderViewModel);
+            TempData["error"] = "Vui lòng điền đầy đủ thông tin";
+            return RedirectToAction("Checkout");
         }
         int id=HttpContext.Session.GetInt32("account_id")??0;
         var user=_context.Users
@@ -126,7 +139,25 @@ public class OrderController:Controller
             product.quantity -= item.quantity;
             _context.SaveChanges();
         }
-        TempData["message"] = "Đặt hàng thành công";
+        //Sau đó xóa hết sản phẩm trong giỏ hàng
+        _context.CartDetails.RemoveRange(user.cart.cart_details);
+        _context.SaveChanges();
+        TempData["success"] = "Đặt hàng thành công";
+        return RedirectToAction("Index", "User");
+    }
+    
+    [HttpPost]
+    public IActionResult CancelOrder(int id)
+    {
+        var order = _context.Orders.FirstOrDefault(o => o.id == id);
+        if (order == null)
+        {
+            TempData["error"] = "Đơn hàng không tồn tại";
+            return RedirectToAction("Index", "User");
+        }
+        order.status = OrderStatus.DA_HUY;
+        _context.SaveChanges();
+        TempData["success"] = "Hủy đơn hàng thành công";
         return RedirectToAction("Index", "User");
     }
 }

@@ -13,7 +13,252 @@
     long cart_shipping_fee=cart_shipping_fee_data==null?0:(long)cart_shipping_fee_data;
     User user=ViewData["user"] as User;
 }
-<div style="display:flex">
+@section css{
+    <link rel="stylesheet" href="~/css/ThanhToan.css">
+    <style>
+        #hidettknh{
+            display: none;
+        }
+        #hideck{
+            display: none;
+        }
+        #hidevizalopay{
+            display: none;
+        }
+    </style>
+}
+<div class="containerThanhToan">
+    <partial name="Header"/>
+    <div class="contentThanhToan">
+        <div class="ttgiaohang">
+            <a href="" class="giohang">
+                Giỏ hàng
+            </a>
+            <i class="fa-solid fa-caret-right"></i>
+            <a href="" class="ttgh">
+                Thông tin giao hàng
+            </a>
+        </div>
+        <div class="thongtingiaohang">
+            <div class="thongtinvanchuyenpttt">
+                @if (TempData["error"] is not null)
+                {
+                    <div class="alert alert-danger">
+                        <p>@TempData["error"]</p>
+                    </div>
+                }
+                <form asp-controller="Order" asp-action="Checkout" method="POST">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="lb">
+                        <label for="lb">
+                            Thông tin vận chuyển
+                        </label>
+                    </div>
+                    <div class="nhaphotensdt">
+                        <div class="inputhoten">
+                            <input type="text" asp-for="name" placeholder="Họ tên" class="iphoten" value="@user.name">
+                        </div>
+                        <div class="inputsdt">
+                            <input type="text" asp-for="phone" placeholder="Số điện thoại" class="ipsdt" value="@user.phone">
+                        </div>
+                    </div>
+                    <div class="nhapemail">
+                        <input type="email" asp-for="email" placeholder="Email" class="ip" value="@user.account.email">
+                    </div>
+                    <div class="nhapdiachi">
+                        <input type="text" asp-for="address" placeholder="Địa chỉ ( ví dụ: 204 Tô Ký, phường Tân Chánh Hiệp, Quận 12)" class="ip" value="@user.address">
+                    </div>
+                    <div class="chontinhthanh">
+                        <div class="optionTT">
+                            <select asp-for="province" >
+                                <option value="0" selected>-- Chọn tỉnh/thành phố --</option>
+                                @if (provinces is not null)
+                                {
+                                    foreach (var province in provinces)
+                                    {
+                                        <option value="@province.Value">@province.Key</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="lb">
+                        <label for="lb">
+                            Phương thức thanh toán
+                        </label>
+                    </div>
+                    <div class="chonphuongthucthanhtoan">
+                        <div class="thanhtoan" onclick="hienttknh()" ondblclick="anttknh()">
+                            <input type="radio" value="1" asp-for="payment_method"  class="radiott">
+                            <p class="pttt">
+                                <img src="~/image/ThanhToanKhiNhanHang.png" class="pt">
+                                <label class="tt">
+                                    Thanh toán khi nhận hàng
+                                </label>
+                            </p>
+                        </div>
+                        <div id="hidettknh">
+                            <div class="thanhtoankhinhanhang">
+                                <div class="labelstk">
+                                    <label for="stk">
+                                        Khi chọn phương thức Thanh toán khi giao hàng (COD), bạn vui lòng kiểm tra kĩ<br>
+                                        hàng trước khi nhận hàng và thanh toán toàn bộ giá trị đơn hàng cho shipper.
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="thanhtoan" onclick="hienck()" ondblclick="anck()">
+                            <input type="radio" value="2" asp-for="payment_method" class="radiott">
+                            <p class="pttt">
+                                <img src="~/image//ChuyenKhoan.png" class="pt">
+                                <label class="tt">
+                                    Chuyển khoản qua ngân hàng
+                                </label>
+                            </p>
+                        </div>
+                        <div id="hideck">
+                            <div class="stknganhang">
+                                <div class="labelstk">
+                                    <label for="stk">
+                                        Khi lựa chọn phương thức thanh toán Chuyển khoản qua ngân hàng, bạn vui lòng<br>
+                                        chuyển 100% giá trị đơn hàng vào tài khoản dưới đây:<br>
+                                        Chủ tài khoản: SÂUKIU MANGA STORE <br>
+                                        STK: 58110001165784<br>
+                                        Ngân hàng Thương mại Cổ phần Đầu tư và Phát triển Việt Nam (BIDV)<br>
+                                        Khi chuyển khoản, vui lòng để rõ Tên - Mã Đơn hàng - SĐT vào phần Nội dung<br>
+                                        chuyển khoản.
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="thanhtoan" onclick="hienvizalopay()" ondblclick="anvizalopay()">
+                            <input type="radio" value="3" asp-for="payment_method" class="radiott">
+                            <p class="pttt">
+                                <img src="~/image/zalopay.png" class="pt">
+                                <label class="tt">
+                                    Ví điện tử ZaloPay
+                                </label>
+                            </p>
+                        </div>
+                        <div id="hidevizalopay">
+                            <div class="vizalopay">
+                                <div class="labelstk">
+                                    <label for="stk">
+                                        Khi lựa chọn phương thức thanh toán Chuyển khoản qua ví ZaloPay, bạn vui lòng<br>
+                                        chuyển 100% giá trị đơn hàng vào tài khoản ZaloPay với số điện thoại dưới đây:<br>
+                                        Tên tài khoản: SÂUKIU MANGA STORE <br>
+                                        SĐT: 0374540896<br>
+                                        Khi chuyển khoản, vui lòng để rõ Tên - Mã Đơn hàng - SĐT vào phần Lời nhắn.
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hoanthanhdathang">
+                        <div class="back">
+                            <a href="" class="giohang">
+                                <i class="fa-solid fa-caret-left"></i>
+                                Giỏ hàng
+                            </a>
+                        </div>
+                        <div class="btnhoanthanh">
+                            <button type="submit" class="btndathang">
+                                Hoàn thành đặt hàng
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="divclasshrdoc">
+                <hr class="hrdoc"  width="0.5" size="180">
+            </div>
+            <div class="chitietgiohang">
+                <div class="thongtindonhang">
+                    <div class="lbgiohang">
+                        <label for="lbgiohang">
+                            GIỎ HÀNG
+                        </label>
+                    </div>
+                    @if (cart_details is not null)
+                    {
+                        @foreach (var cart_detail in cart_details)
+                        {
+                            <div class="thongtinsp">
+                                <div class="imagesp">
+                                    <img src="@cart_detail.product.image" class="truyen">
+                                    <div class="spansoluong">
+                                        <span class="sl">@cart_detail.quantity</span>
+                                    </div>
+                                </div>
+                                <div class="chitietsp">
+                                    <div class="ttsp">
+                                        <a href="" class="name">
+                                            @cart_detail.product.name
+                                        </a>
+                                    </div>
+                                    <div class="ttspprice">
+                                        <label for="price" class="lbprice">
+                                            @(Helper.format_VND(cart_detail.quantity * cart_detail.product.price))
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    </div>
+                    <div class="divhr"><hr class="hr"></div>
+                    <div class="thongtingiadonhang">
+                        <div class="vanchuyen">
+                            <label for="tamtinh">
+                                Tạm tính:
+                            </label>
+                        </div>
+                        <div class="price">
+                            <label for="gia">
+                                @Helper.format_VND(total_price)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="thongtingiadonhang">
+                        <div class="vanchuyen">
+                            <label for="tamtinh">
+                                Phí vận chuyển
+                            </label>
+                        </div>
+                        <div class="price">
+                            @if(user.province is not null && (Helper.province_name(user.province) == "Hà Nội" || Helper.province_name(user.province)== "Hồ Chí Minh"))
+                            {
+                                <label for="gia" id="shipping-fee">@Helper.format_VND(shipping_fee["hn_hcm"]) </label>
+                            }
+                            else if(user.province is null)
+                            {
+                                <label for="gia" id="shipping-fee">___</label>
+                            }
+                            else
+                            {
+                                <label for="gia" id="shipping-fee">@Helper.format_VND(shipping_fee["tinh_thanh"])</label>
+                            }
+                        </div>
+                    </div>
+                    <div class="divhr"><hr class="hr"></div>
+                    <div class="sumgia">
+                        <div class="tongcong">
+                            <label for="sum">
+                                Tổng cộng
+                            </label>
+                        </div>
+                        <div class="pricesum">
+                            <label for="gia" id="total_price" >
+                                @Helper.format_VND(total_price + cart_shipping_fee)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>    
+    <partial name="Footer"/>
+</div>
+@*<div style="display:flex">
     <div>
         @if (TempData["error"] is not null)
         {
@@ -94,14 +339,14 @@
         <label for="">Tổng cộng: </label>
         <span id="total_price">@Helper.format_VND(total_price + cart_shipping_fee)</span>
     </div>
-</div>
+</div>*@
 @section js{
-        <script>
+    <script>
 /*{{--thêm script để tính tổng tiền khi chọn tỉnh/thành phố--}}
-{{--khi thay đổi tỉnh thành phố thì sẽ tính lại tổng tiền theo value của id="total_price"--}}
-{{--nếu tỉnh thành phố là Hà Nội hoặc Hồ Chí Minh thì lấy value + 15000 rồi format lại theo tiền Việt Nam--}}
-{{--nếu tỉnh thành phố là null thì lấy value + 0 rồi format lại theo tiền Việt Nam--}}
-{{--nếu tỉnh thành phố là tỉnh khác thì lấy value + 30000 rồi format lại theo tiền Việt Nam--}}*/
+    {{--khi thay đổi tỉnh thành phố thì sẽ tính lại tổng tiền theo value của id="total_price"--}}
+    {{--nếu tỉnh thành phố là Hà Nội hoặc Hồ Chí Minh thì lấy value + 15000 rồi format lại theo tiền Việt Nam--}}
+    {{--nếu tỉnh thành phố là null thì lấy value + 0 rồi format lại theo tiền Việt Nam--}}
+    {{--nếu tỉnh thành phố là tỉnh khác thì lấy value + 30000 rồi format lại theo tiền Việt Nam--}}*/
     $(document).ready(function () {
         $('select[name="province"]').change(function () {
             let province = $(this).val();
@@ -117,5 +362,31 @@
             };
         });
     });
+</script>
+<script>
+    function hienttknh(){
+        document.getElementById("hidettknh").style.display = "block";
+        document.getElementById("hideck").style.display = "none";
+        document.getElementById("hidevizalopay").style.display = "none";
+    }
+    function anttknh(){
+        document.getElementById("hidettknh").style.display = "none";
+    }
+    function hienck(){
+        document.getElementById("hideck").style.display = "block";
+        document.getElementById("hidettknh").style.display = "none";
+        document.getElementById("hidevizalopay").style.display = "none";
+    }
+    function anck(){
+        document.getElementById("hideck").style.display = "none";
+    }
+    function hienvizalopay(){
+        document.getElementById("hidevizalopay").style.display = "block";
+        document.getElementById("hideck").style.display = "none";
+        document.getElementById("hidettknh").style.display = "none";
+    }
+    function anvizalopay(){
+        document.getElementById("hidevizalopay").style.display = "none";
+    }
 </script>
 }

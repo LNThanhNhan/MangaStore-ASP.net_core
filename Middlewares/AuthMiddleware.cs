@@ -19,7 +19,7 @@ namespace MangaStore.Middlewares
             //rồi thực hiện kiểm tra xem tên controller này
             //có tên controller trong mảng sau { "Cart", "Order", "Product"}
             //và so sánh không cần xét đến chữ hoa thường
-            string[] controllers = { "Cart", "Order", "Product" };
+            string[] controllers = { "Cart", "Order","User" };
             if (controllers.Contains(controllerName, StringComparer.OrdinalIgnoreCase))
             {
                 //rồi kiểm tra xem có tồn tại session "account_id" hay không

@@ -1,21 +1,248 @@
 ﻿@using MangaStore.ViewModels
+@using MangaStore.Helpers
 @model ProductViewModel
-
+@{
+    List<ProductViewModel>sameAuthor = ViewData["sameAuthor"] as List<ProductViewModel>;
+    List<ProductViewModel>sameCategory = ViewData["sameCategory"] as List<ProductViewModel>;
+}
 @section css{
     <link rel="stylesheet" href="~/css/jquery.toast.min.css">
+    <link rel="stylesheet" href="~/css/ChiTietSanPham.css" asp-append-version="true" />
 }
-<img src="@Model.image" width="200px" height="350px">
+<div class="containerChiTietSanPham">
+    <partial name="Header"/>
+    <div class="contentChiTietSanPham">
+        <div class="tieude">
+            <a href="" class="hreftrangchu">
+                TRANG CHỦ
+            </a>
+            /
+            <a href="" class="hreftrinhtham">
+                Trinh thám
+            </a>
+            /
+            <a href="" class="hreftentruyen">
+                @Model.name
+            </a>
+        </div>
+        <div class="noidungsanpham">
+            <div class="imagesp">
+                <img src="@Model.image" class="imgsp">
+            </div>
+            <div class="motasanpham">
+                <div class="lbtentruyen">
+                    <label for="lbtentruyen">
+                        @Model.name
+                    </label>
+                </div>
+                <div class="giatruyen">
+                    <a href="" class="gia">
+                        @(Helper.format_VND(Model.price)) <del class="giabandau">@(Helper.format_VND(Model.list_price))</del>
+                    </a>
+                </div>
+                <div class="thongtin">
+                    <div class="lb">
+                        <label for="lb">
+                            Tác giả 
+                        </label>
+                    </div>
+                    <div class="lbten">
+                        <label for="lbten">
+                            <a asp-controller="Home" asp-action="Author" asp-route-slug="@Model.author_slug" style="text-decoration: none">
+                                @Model.author
+                            </a>
+                        </label>
+                    </div>
+                    <div class="lb">
+                        <label for="lb">
+                            Kích thước 
+                        </label>
+                    </div>
+                    <div class="lbten">
+                        <label for="lbten">
+                            @Model.size
+                        </label>
+                    </div>
+                </div>
+                <div class="thongtin">
+                    <div class="lb">
+                        <label for="lb">
+                            Năm xuất bản 
+                        </label>
+                    </div>
+                    <div class="lbten">
+                        <label for="lbten">
+                            @Model.publish_year
+                        </label>
+                    </div>
+                    <div class="lb">
+                        <label for="lb">
+                            Thể loại
+                        </label>
+                    </div>
+                    <div class="lbten">
+                        <label for="lbten">
+                            @Model.category_name
+                        </label>
+                    </div>
+                </div>
+                <div class="thongtin">
+                    @if (@Model.collection is not  null)
+                    {
+                        <div class="lb">
+                            <label for="lb">
+                                Collection
+                            </label>
+                        </div>
+                        <div class="lbten">
+                            <label for="lbten">
+                                <a asp-controller="Home" asp-action="Collection" asp-route-slug="@Model.collection_slug" style="text-decoration: none">
+                                    @Model.collection  
+                                </a>
+                            </label>
+                        </div>
+                    }
+                    @if (ViewBag.Sample == "Có")
+                    {
+                        <div class="lb">
+                            <label for="lb">
+                                <a asp-controller="Home" asp-action="Sample" asp-route-id="@Model.id" class="btn btn-primary">Đọc thử</a>   
+                            </label>
+                        </div>
+                    }
+                    <div class="lbten">
+                        <label for="lbten">
+
+                        </label>
+                    </div>
+                </div>
+                <div class="lbmotand">
+                    <label for="lbmotand">
+                        Mô tả
+                    </label>
+                </div>
+                <div class="lbndmota">
+                    <label for="lbndmota">
+                        @Model.description
+                    </label>
+                </div>
+                @if (@Model.quantity > 0)
+                {
+                    <form asp-controller="Cart" asp-action="AddToCart" method="post" class="soluong">
+                        <div class="soluongspmua">
+                            <label for="lbslmua">
+                                Số lượng
+                            </label>
+                            <input type="number" name="quantity" class="slmua" value="1" min="1" step="1">
+                            <input type="hidden" name="productId" value="@Model.id">
+                        </div>
+                        <div class="btnadd">
+                            <button type="submit" class="btnthemvaogio">
+                                Thêm vào giỏ
+                            </button>
+                        </div>
+                    </form>
+                }
+                else
+                {
+                    <div class="soluong">
+                        <div class="btnadd">
+                            <button type="submit" class="btnthemvaogio" disabled>
+                                Hết hàng
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="cungtg">
+            <div class="lbcungtg">
+                <label for="lbcungtg">
+                    CÙNG TÁC GIẢ
+                </label>
+            </div>
+            <div class="sanphamcungtg">
+                @if (sameAuthor is not null)
+                {
+                    @foreach (var sameAuthorProduct in sameAuthor)
+                    {
+                        <div class="thongtinsanpham">
+                            <div class="imagesp">
+                                <img src="@sameAuthorProduct.image" class="imgspcungtg">
+                            </div>
+                            <div class="thongtinspcungtg">
+                                <div class="namemoney">
+                                    <a asp-controller="Home" asp-action="Detail" asp-route-slug="@sameAuthorProduct.slug" class="hrefsp">
+                                        @sameAuthorProduct.name
+                                    </a>
+                                </div>
+                                <div class="giasp">
+                                    <a href="" class="hrefgiasp">
+                                        @(Helper.format_VND(sameAuthorProduct.price)) <del class="giabandau">@(Helper.format_VND(sameAuthorProduct.list_price))</del>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+            <div class="buttonxemthem">
+                <button class="btnmore">
+                    XEM THÊM
+                </button>
+            </div>
+        </div>
+        <div class="divhr">
+            <hr class="hr">
+        </div>
+        <div class="lbsplienquan">
+            <label for="lbsplienquan">
+                SẢN PHẨM LIÊN QUAN
+            </label>
+        </div>
+    <div class="sanphamlienquan">
+        @if (sameCategory is not null)
+        {
+            @foreach (var sameCategoryProduct in sameCategory)
+            {
+                <div class="thongtinsplienquan">
+                    <div class="imgsanpham">
+                        <img src="@sameCategoryProduct.image" class="image">
+                    </div>
+                    <div class="tensp">
+                        <a asp-controller="Home" asp-action="Detail" asp-route-slug="@sameCategoryProduct.slug" class="hreftensp">
+                            @sameCategoryProduct.name
+                        </a>
+                    </div>
+                    <div class="money">
+                        <a href="" class="hrefmoney">
+                            @(Helper.format_VND(sameCategoryProduct.price)) <del class="giabandau">@(Helper.format_VND(sameCategoryProduct.list_price))</del>
+                        </a>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+            <div class="buttonxemthem">
+                <button class="btnmore">
+                    XEM THÊM
+                </button>
+            </div>
+         </div>
+    <partial name="Footer"/>
+</div>
+@*<img src="@Model.image" width="200px" height="350px">
 <h2>@Model.name</h2>
 <h3>@Model.priceVND</h3>
 <form asp-controller="Cart" asp-action="AddToCart" method="post">
     <input type="number" name="quantity" id="" value="1" min="1">      
     <input type="hidden" name="productId" value="@Model.id">
     <input type="submit" value="Thêm vào giỏ hàng">
-</form>
-@if (ViewBag.Sample == "Có")
+</form>*@
+@*@if (ViewBag.Sample == "Có")
 {
     <a asp-controller="Home" asp-action="Sample" asp-route-id="@Model.id" class="btn btn-primary">Đọc thử</a>   
-}
+}*@
 @section js{
     <script src="~/js/jquery.toast.min.js"></script>
     <script>
@@ -46,7 +273,10 @@
                             //$('.soluongmua').html(response.data);
                         }
                         else{
-                            console.log(response);
+                            //console.log(response);
+                            if(typeof (response)=="string"){
+                                window.location.href='/login';
+                            }
                             $.toast({
                                 text: response.message, // Text that is to be shown in the toast
                                 heading: 'Lỗi', // Optional heading to be shown on the toast

@@ -1,4 +1,5 @@
-﻿<div class="header">
+﻿@using Microsoft.AspNetCore.Http;
+<div class="header">
     <table class="tbheader">
         <tr>
             <td class="tdlgchu">
@@ -13,11 +14,14 @@
             </td>
             <td class="tddndk">
                 <div class="dndk">
-                   @* @auth()
-                        <a href="{{ route('user.profile.info') }}" class="link">{{auth()->user()->username}}</a>
-                    @else*@
-                        <a href="{{ route('register') }}" class="link" title="Dang Ky">ĐĂNG KÝ</a><span class="sep">|</span><a href="./login" class="link" title="Dang Nhap">ĐĂNG NHẬP</a>
-                   @* @endauth*@
+                    @if (Context.Session.GetString("username") is not null)
+                    {
+                        <a asp-controller="User" asp-action="Index" class="link">@Context.Session.GetString("username")</a>
+                    }
+                    else
+                    {
+                        <a href="/register" class="link" title="Dang Ky">ĐĂNG KÝ</a><span class="sep">|</span><a href="./login" class="link" title="Dang Nhap">ĐĂNG NHẬP</a>
+                    }
                 </div>
             </td>
         </tr>
@@ -57,8 +61,8 @@
             <td class="tdcart">
                 <div class="cart">
                     <label>
-                        <a asp-controller="Cart" asp-action="Index">
-                        <i class="fa-solid fa-cart-shopping"></i>
+                        <a asp-controller="Cart" asp-action="Index" style="text-decoration: none; color: black">
+                            <i class="fa-solid fa-cart-shopping"></i>
                         </a>
                     </label>
                     <div class="spansl">
@@ -77,22 +81,22 @@
     <table class="tbmenu">
         <tr>
             <td class="tdtrangchu">
-                <a href="{{route('home.index')}}" class="trangchu">
+                <a asp-controller="Home" asp-action="Index" class="trangchu">
                     TRANG CHỦ
                 </a>
             </td>
             <td class="tdsanpham">
-                <a href="{{route('home.search')}}" class="sanpham">
+                <a asp-controller="Home" asp-action="Search" class="sanpham">
                     SẢN PHẨM
                 </a>
             </td>
             <td class="tdcollection">
-                <a href="{{route('home.get-collection')}}" class="collection">
+                <a asp-controller="Home" asp-action="Collection" class="collection">
                     COLLECTION
                 </a>
             </td>
             <td class="tdhotdeals">
-                <a href="{{route('home.get-hot-deal')}}" class="hotdeals">
+                <a asp-controller="Home" asp-action="HotDeal" class="hotdeals">
                     HOT DEALS
                 </a>
             </td>

@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Globalization;
+using System.Text.RegularExpressions;
 using MangaStore.Enums;
 
 namespace MangaStore.Helpers
@@ -103,6 +104,22 @@ namespace MangaStore.Helpers
 		public static string order_status_name(int status)
 		{
 			return OrderStatus.getArrayView().FirstOrDefault(x => x.Value == status).Key;
+		}
+		
+		//Làm hàm truyền vào biến có kiểu Datetime
+		//có định dạng yyyy-MM-dd-HH-mm-ss
+		//và trả về ngày có định dạng dd/MM/yyyy 
+		public static string format_date(DateTime date)
+		{
+			return date.ToString("dd/MM/yyyy");
+		}
+		
+		//Làm hàm truyền vào biến có kiểu Datetime
+		//có định dạng yyyy-MM-dd-HH-mm-ss
+		//và trả về ngày có định dạng dd/MM/yyyy HH:mm:ss 
+		public static string format_dateDMY(DateTime date)
+		{
+			return date.ToString("dd/MM/yyyy HH:mm:ss");
 		}
     }
 }

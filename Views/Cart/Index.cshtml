@@ -1,9 +1,109 @@
 ﻿@using MangaStore.Helpers
 @model List<CartDetail>
-@*@section css{
-    <link rel="stylesheet" href="~/css/jquery.toast.min.css">
-}*@
-<form asp-controller="Cart" asp-action="UpdateCart" method="post">
+@section css{
+    <link href="~/css/GioHang.css" rel="stylesheet" />
+}
+<div class="containerGioHang">
+    <partial name="Header"/>
+    <div class="contentGioHang">
+        <form asp-controller="Cart" asp-action="UpdateCart" method="post">
+        <div class="labelGioHang">
+            <label for="giohang">
+                GIỎ HÀNG
+            </label>
+        </div>
+        <div class="tablegiohang">
+            <table class="tbgiohang">
+                <tr>
+                    <td class="thsp">Sản phẩm</td>
+                    <td class="thdongia">Đơn giá</td>
+                    <td class="thsluong">Số lượng</td>
+                    <td class="thgiatien">Giá tiền</td>
+                    <td class="thnone"></td>
+                </tr>
+                <tr>
+                    <td colspan="6">
+                        <div class="listsp">
+                            <ul>
+                                @foreach (var item in Model)
+                                {
+                                    <li>
+                                        <div class="tbsp">
+                                            <table class="tablesanpham">
+                                                <tr>
+                                                    <td class="image">
+                                                        <div class="imgsp">
+                                                            <img src="@item.product.image" class="imagesp">
+                                                        </div>
+                                                        <div class="name">
+                                                            <label for="name">
+                                                                @item.product.name
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td class="gia">
+                                                        <label class="giasp">
+                                                            @(Helper.format_VND(@item.product.price))
+                                                        </label>
+                                                    </td>
+                                                    <td class="sl">
+                                                        <input type="number" name="arr[]" class="soluong" value="@item.quantity" min="1">
+                                                    </td>
+                                                    <td class="tong">
+                                                        <label class="giatien">
+                                                            @(Helper.format_VND(item.product.price * item.quantity))
+                                                        </label>
+                                                    </td>
+                                                    <td class="delete">
+                                                        <div class="bin">
+                                                            <a href="@Url.Action("DeleteCartItem", "Cart", new { id = item.product.id })" style="text-decoration: none; color: white">
+                                                                <img src="~/image/thungrac.png" class="thungrac">
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="tongtien">
+            <table class="tbtinhtien">
+                <tr>
+                    <td class="tdtongtien">
+                        <label class="tongtiensp" for="tongtien">Tổng tiền:</label>
+                    </td>
+                    <td class="tdtien"><label class="tien" for="tien">@(Helper.format_VND(ViewBag.cart_total))</label></td>
+                </tr>
+                <tr>
+                    <td class="tdtieptucmua">
+                        <button type="submit" class="btntieptucmua">
+                            <p>
+                                Cập nhật giỏ hàng
+                            </p>
+                        </button>
+                    </td>
+                    <td class="tdthanhtoan">
+                        <button class="btnthanhtoan">
+                            <a asp-controller="Order" asp-action="Checkout" style="text-decoration: none; color: white">
+                                Thanh toán
+                                <i class="fa-solid fa-caret-right"></i>
+                            </a>
+                        </button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        </form>
+    </div>
+    <partial name="Footer"/>
+</div>
+@*<form asp-controller="Cart" asp-action="UpdateCart" method="post">
     <table>
         <tr>
             <th>Ảnh sản phẩm</th>
@@ -31,7 +131,4 @@
     </table>
     <input type="submit" value="Cập nhật giỏ hàng">
 </form>
-<a asp-controller="Order" asp-action="Checkout">Thanh toán</a>
-@*@section js{
-    <script src="~/js/jquery.toast.min.js"></script>
-}*@
+<a asp-controller="Order" asp-action="Checkout">Thanh toán</a>*@

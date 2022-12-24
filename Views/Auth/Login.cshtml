@@ -1,13 +1,87 @@
 ﻿@using MangaStore.ViewModels
 @model LoginViewModel
-<form id="login-form" asp-action="Login" asp-controller="Auth" method="Post">
+@section css{
+    <link rel="stylesheet" href="~/css/DangNhap.css" />
+}
+<div class="containerDangNhap">
+    <partial name="Header"/>
+    <div class="contentDangNhap">
+                <table class="tbcontentDangNhap">
+                    <tr>
+                        <td class="tdlbDangNhap">
+                            <div class="lbdn">
+                                <label for="lbdangnhap">
+                                    ĐĂNG NHẬP
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="divhr"><hr class="hr"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="formdn">
+                            <div asp-validation-summary="All" class="text-danger"></div>
+                            <form asp-action="Login" asp-controller="Auth" method="post" id="login-form">
+                                <table class="tbformdangnhap">
+                                    <tr>
+                                        <td colspan="2" class="tdhoten">
+                                            <div class="texthoten">
+                                                <input type="email" asp-for="email" placeholder="Email" class="inputhoten">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="tdpw">
+                                            <div class="password">
+                                                <input type="password" asp-for="password" placeholder="Mật khẩu" class="inputmk">
+                                                <input type="hidden" asp-for="recaptcha">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="tdbtndn">
+                                            <div class="btndangnhap">
+                                                <button type="submit" class="btnlogin">
+                                                    ĐĂNG NHẬP
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdquenmk">
+                                            <div class="quenmk">
+                                                <a href="" class="hrefquenmk">
+                                                    Quên mật khẩu
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <td class="tddangky">
+                                            <div class="dangky">
+                                                <a href="/register" class="hrefdangky">
+                                                    Đăng ký
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+    <partial name="Footer"/>
+</div>
+@*<form id="login-form" asp-action="Login" asp-controller="Auth" method="Post">
 	Email
 	<input type="email" asp-for="email" required />
 	Mật khẩu
     <input type="password" asp-for="password" required />
     <input type="hidden" asp-for="recaptcha">
 	<input type="submit" value="Đăng nhập" />
-</form>
+</form>*@
 @section js{
     <script src="https://www.google.com/recaptcha/api.js?render=6Lf_X6IjAAAAAJJs37Rr7TpZr1HKPJYYBh7Vqb3J"></script>
     <script>

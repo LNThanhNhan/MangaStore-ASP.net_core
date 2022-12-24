@@ -1,0 +1,116 @@
+﻿@using MangaStore.Helpers
+@using MangaStore.Enums
+@model List<Order>
+@section css{
+    <link href="~/css/DanhSachDonHang.css" rel="stylesheet" />
+}
+<div class="containerDanhSachDonHang">
+    <partial name="Header"/>
+    <div class="contentDanhSachDonHang">
+        <div class="danhsachdonhang">
+            <div class="taikhoan">
+                <div class="lbTenTK">
+                    <label for="tentk">
+                        TÊN TÀI KHOẢN
+                    </label>
+                </div>
+                <div class="btnTTCN">
+                    <button class="btnThongTinCaNhan">
+                        <a asp-controller="User" asp-action="Index" style="text-decoration: none; color: black">
+                            Thông tin cá nhân
+                        </a>
+                    </button>
+                </div>
+                <div class="btnDSDH">
+                    <button class="btnDanhSachDonHang">
+                        <a asp-controller="Order" asp-action="Index" style="text-decoration: none; color: black">
+                            Danh sách đơn hàng
+                        </a>
+                    </button>
+                </div>
+                <div class="btnThoat">
+                    <form asp-controller="Auth" asp-action="Logout" method="post">
+                        <button type="submit" class="btnExit">
+                            Đăng xuất
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="divclasshr">
+                <hr class="hr" width="0.5" size="180">
+            </div>
+            <div class="danhsachcacdonhang">
+                @foreach (var order in Model)
+                {
+                    <div class="thongtindanhsachdonhang">
+                        <div class="donhang">
+                            <div class="xacnhanngaydat">
+                                <div class="ngaydat">
+                                    <a href="" class="madonhang">
+                                        #@order.id
+                                    </a><br/>
+                                    <label for="lbngaydat">
+                                        Ngày đặt: @(Helper.format_dateDMY(order.order_date))
+                                    </label>
+                                </div>
+                                <div class="btnchoxn">
+                                    <button class="btnchoxacnhan">
+                                        @(Helper.order_status_name(order.status))
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="listdonhang">
+                                @foreach (var item in order.order_details)
+                                {
+                                    <div class="thongtinsanpham">
+                                        <div class="imagesp">
+                                            <img src="@item.product.image" class="imgsp">
+                                        </div>
+                                        <div class="motasanpham">
+                                            <div class="tensp">
+                                                <a href="" class="hreftensp">
+                                                    @item.product.name
+                                                </a>
+                                            </div>
+                                            <div class="slmua">
+                                                <span class="inputslmua">@item.quantity</span>
+                                            </div>
+                                            <div class="giasp">
+                                                <label for="giasp">
+                                                    @(Helper.format_VND(@item.quantity * @item.product.price))
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <div class="tongtien">
+                                @if (order.status == OrderStatus.CHO_XAC_NHAN)
+                                {
+                                    <form asp-controller="Order" asp-action="CancelOrder" asp-route-id="@order.id" method="post" class="huydon" onsubmit="return confirm('Đơn hàng sẽ bị hủy')">
+                                        <button class="btncancel">
+                                            Hủy đơn
+                                        </button>
+                                    </form>
+                                }
+                                <div class="tongtiendh">
+                                    <div class="sum">
+                                        <label for="sum">
+                                            Tổng số tiền :
+                                        </label>
+                                    </div>
+                                    <div class="tongsotien">
+                                        <a href="" class="sotien">
+                                            @Helper.format_VND(order.total_price)
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                </div>
+            </div>
+        </div>
+    <partial name="Footer"/>
+</div>

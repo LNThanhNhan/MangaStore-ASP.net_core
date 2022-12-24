@@ -1,11 +1,140 @@
-﻿@model User
+﻿@using Microsoft.AspNetCore.Http;
+@model User
 @{
     Dictionary<string, int> provinces=ViewData["provinces"] as Dictionary<string, int>;
 }
-@if(TempData["message"]!=null)
+@section css{
+    <link href="~/css/ThongTinCaNhan.css" rel="stylesheet" />
+}
+<div class="containerThongTinCaNhan">
+    <partial name="Header"/>
+    <div class="contentThongTinCaNhan">
+        <div class="thongtincanhan">
+            <div class="taikhoan">
+                <div class="lbTenTK">
+                    <label for="tentk">
+                        @Context.Session.GetString("username")
+                    </label>
+                </div>
+                <div class="btnTTCN">
+                    <button class="btnThongTinCaNhan">
+                        <a asp-controller="User" asp-action="Index" style="text-decoration: none; color: white">
+                            Thông tin cá nhân
+                        </a>
+                    </button>
+                </div>
+                <div class="btnDSDH">
+                    <button class="btnDanhSachDonHang">
+                        <a asp-controller="Order" asp-action="Index" style="text-decoration: none; color: black">
+                            Danh sách đơn hàng
+                        </a>
+                    </button>
+                </div>
+                <div class="btnThoat">
+                    <form asp-controller="Auth" asp-action="Logout" method="post">
+                        <button type="submit" class="btnExit">
+                            Đăng xuất
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="divclasshr">
+                <hr class="hr" width="0.5" size="180">
+            </div>
+            <div class="thongtintk">
+                <div class="lbtttk">
+                    <label for="tentk">
+                        THÔNG TIN TÀI KHOẢN
+                    </label>
+                </div>
+                <div class="hoten">
+                    <div class="lbhoten">
+                        <label for="lbhoten">
+                            Họ tên
+                        </label>
+                    </div>
+                    <div class="texthoten">
+                        <input type="text" placeholder="Nhập họ tên" class="inputhoten" value="@Model.name">
+                    </div>
+                </div>
+                <div class="email">
+                    <div class="lbmailuser">
+                        <label for="lbmailuser">
+                            Email
+                        </label>
+                    </div>
+                    <div class="textmail">
+                        <input type="text" placeholder="Nhập Email" class="inputmail" value="@Model.account.email">
+                    </div>
+                </div>
+                <div class="sdt">
+                    <div class="lbsodienthoai">
+                        <label for="lbsodienthoai">
+                            Số điện thoại
+                        </label>
+                    </div>
+                    <div class="textsdt">
+                        <input type="text" placeholder="Nhập số điện thoại" class="inputsdt" value="@Model.phone">
+                    </div>
+                </div>
+                <div class="diachi">
+                    <div class="lbdiachi">
+                        <label for="lbdiachi">
+                            Địa chỉ
+                        </label>
+                    </div>
+                    <div class="textdiachi">
+                        <textarea name="Địa chỉ" id="inputdiachi" rows="2" placeholder="Nhập địa chỉ">@Model.address</textarea>
+                    </div>
+                </div>
+                <div class="tinhthanh">
+                    <div class="lbtinhthanh">
+                        <label for="lbtinhthanh">
+                            Tỉnh/Thành
+                        </label>
+                    </div>
+                    <div class="optionTT">
+                        <select asp-for="province" id="province">
+                            <option value="">Chọn tỉnh/thành phố</option>
+                            @foreach (var item in provinces)
+                            {
+                                <option value="@item.Value">@item.Key</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="gender">
+                    <div class="lbgioitinh">
+                        <label for="lbgioitinh">
+                            Giới tính
+                        </label>
+                    </div>
+                    <div class="radiogender">
+                        <input type="radio" asp-for="gender" value="1" id="gtnam">Nam
+                        <input type="radio" asp-for="gender" value="0" id="gtnu">Nữ
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="thaydoimatkhau">
+                            <input id="change" type="button" value="Thay đổi mật khẩu" class="btnthaydoimk">
+                        </div>
+                        <div id="change-password">
+                        </div>
+                    </div>
+                    <div class="btncapnhattk">
+                        <input type="button" value="Cập nhật tài khoản" class="btnupdate">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <partial name="Footer"/>
+</div>
+@*@if(TempData["success"]!=null)
 {
     <div class="alert alert-success">
-        @TempData["message"]
+        @TempData["success"]
     </div>
 }
 <h3>@Model.name</h3>
@@ -25,4 +154,4 @@
 <br>
 <form asp-controller="Auth" asp-action="Logout" method="post">
     <button type="submit">Đăng xuất</button>
-</form>
+</form>*@
