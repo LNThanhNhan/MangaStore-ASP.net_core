@@ -3,17 +3,174 @@
 @using X.PagedList
 @using X.PagedList.Mvc.Core
 @using X.PagedList.Web.Common
+@using MangaStore.Helpers
 @model SearchFilterViewModel
 @{
 	string q =ViewData["q"] as string;
 	PagedList<ProductViewModel> list = ViewData["list"] as PagedList<ProductViewModel>;
 	string action = ViewBag.Action as string;
 }
-<form asp-controller="Home" asp-action="Search" method="get" asp-route-type="search">
-	<input name="q" type="search" value=@ViewBag.q />
-	<button type="submit">Tìm kiếm</button>
-</form>
-<table>
+@section css{
+	<link rel="stylesheet" href="~/css/SanPham.css" asp-append-version="true" />
+}
+<div class="containerSanPham">
+	<partial name="Header"/>
+	<div class="contentSanPham">
+        <div class="tcdmtcsp">
+            <a href="" class="hreftrangchu">
+                Trang chủ
+            </a>
+            /
+            <a href="" class="hrefdanhmuc">
+                Danh mục
+            </a>
+            /
+            <a href="" class="hreftcsp">
+                Tất cả sản phẩm
+            </a>
+        </div>
+        <div class="noidungcontentsanpham">
+            <div class="noidungdanhmucsp">
+                <div class="lbdanhmuc">
+                    <label for="lbdanhmuc">
+                        DANH MỤC
+                    </label>
+                </div>
+                <div class="divhr">
+                    <hr class="hr">
+                </div>
+	            <form asp-controller="Home" asp-action="Filter" method="get" asp-route-q=@q >
+		            <div class="danhsachdanhmuc">
+			            <ul>
+				            @for (int i = 0; i < Model.Categories.Count; i++)
+				            {
+								@*<div>
+									<label>
+										@Html.CheckBoxFor(m => m.Categories[i].IsChecked)
+										@Html.HiddenFor(m=>m.Categories[i].Display)
+										@Html.HiddenFor(m=>m.Categories[i].Value)
+										@Model.Categories[i].Display
+									</label>
+								</div>*@
+					            <li>
+						            @Html.CheckBoxFor(m => m.Categories[i].IsChecked,new { @class = "checkbox"})
+						            @Html.HiddenFor(m=>m.Categories[i].Display)
+						            @Html.HiddenFor(m=>m.Categories[i].Value)
+						            @Model.Categories[i].Display
+						            <div class="divhr">
+							            <hr class="hr">
+						            </div>
+					            </li>
+				            }
+			            </ul>
+		            </div>
+		            <div class="divhr">
+			            <hr class="hr">
+		            </div>
+		            <div class="lbkhoanggia">
+	                    <label for="lbkhoanggia">
+	                        GIÁ
+	                    </label>
+	                </div>
+	                <div class="lbchonmucgia">
+	                    <label for="lbchonmucgia">
+		                    Chọn khoảng giá
+	                    </label>
+	                </div>
+	                <div class="nhapkhoang">
+	                    <p>
+		                    <input step="1000" type="number" class="inputkhoanggia" placeholder="0" asp-for=@Model.min_price id=""
+		                           value=@Model.min_price>
+		                    - 
+		                    <input type="number" step="1000" placeholder="0" class="inputkhoanggia" asp-for=@Model.max_price id=""
+		                           value=@Model.max_price>
+	                    </p>
+	                </div>
+	                <div class="apdung">
+	                    <button class="btnapdung">
+		                    Lọc
+	                    </button>
+	                </div>  
+	            </form>
+            </div>
+	        <div class="tatcasp">
+		        <div class="lbtcsp">
+			        <label for="lbtcsp">
+				        TẤT CẢ SẢN PHẨM
+			        </label>
+		        </div>
+		        <div class="thongtinsanpham">
+			        @foreach (var product in list)
+			        {
+				        <div class="thongtincacsp">
+					        <a href="" class="sanphamtruyen">
+						        <div class="imagesp">
+							        <img src="@product.image" class="imgsp">
+						        </div>
+						        <div class="makhuyenmai">
+							        <div class="imagemagiam">
+								        <img src="~/image/magiam.png" class="imgmagiam">
+							        </div>
+							        <div class="sale">
+								        <span class="lbsale">-@(product.discount_rate)%</span>
+							        </div>
+						        </div>
+						        <div class="thongtinsp">
+							        <div class="lbsp">
+								        <a href="" class="name">
+									        @product.name
+								        </a>
+							        </div>
+							        <div class="giasp">
+								        <a href="" class="htgiasp">
+									        @(Helper.format_VND(product.price))
+								        </a>
+							        </div>
+						        </div>
+					        </a>
+				        </div>
+			        }
+		        </div>
+		        <div>
+			        @if (action == "Author" || action == "Collection")
+                    {
+                        @Html.PagedListPager((IPagedList)list, page => Url.Action(action, "Home",
+                            new
+                            {
+                                slug = ViewBag.Slug,
+                                page = page,
+                                q = ViewBag.q,
+                                filterViewModel = Model
+                            }),
+                            new PagedListRenderOptions
+                            {
+                                LiElementClasses = new string[] { "page-item" },
+                                PageClasses = new string[] { "page-link" }
+                            })
+                    }
+                    else
+                    {
+                        @Html.PagedListPager((IPagedList)list, page => Url.Action(action, "Home",
+                            new
+                            {
+                                page = page,
+                                q = ViewBag.q,
+                                filterViewModel = Model
+                            }),
+                            new PagedListRenderOptions
+                            {
+                                LiElementClasses = new string[] { "page-item" },
+                                PageClasses = new string[] { "page-link" }
+                            })
+                    }
+		        </div>
+		    </div>
+		</div>
+	</div>
+<partial name="Footer"/>
+</div>              
+
+	                    @*<table>
 	@foreach (var product in list)
 	{
 		<tr>
@@ -26,21 +183,10 @@
 			<td>@product.priceVND</td>
 		</tr>
 	}
-</table>
-<form asp-controller="Home" asp-action="Filter" method="get" asp-route-q=@q >
-	@for (int i = 0; i < Model.Categories.Count; i++)
-	{
-		<div>
-			<label>
-				@Html.CheckBoxFor(m => m.Categories[i].IsChecked)
-				@Html.HiddenFor(m=>m.Categories[i].Display)
-				@Html.HiddenFor(m=>m.Categories[i].Value)
-				@Model.Categories[i].Display
-			</label>
-		</div>
-	}
-	
-	Khoảng giá
+</table>*@
+
+
+	                    @*Khoảng giá
 	<br>
 	Tối thiểu
 	<input type="number" asp-for=@Model.min_price id=""
@@ -50,35 +196,11 @@
 		   value=@Model.max_price>
 	<br>
 	<input type="submit" value="Lọc">
-</form>
-@if (action == "Author" || action == "Collection")
-{
-	@Html.PagedListPager((IPagedList)list, page => Url.Action(action,"Home",
-		new
-		{
-			slug=ViewBag.Slug,
-			page=page ,
-			q=ViewBag.q,
-			filterViewModel=Model
-		}),
-		new PagedListRenderOptions
-		{
-			LiElementClasses = new string[] { "page-item" },
-			PageClasses = new string[] { "page-link" }
-		})
-}
-else
-{
-	@Html.PagedListPager((IPagedList)list, page => Url.Action(action,"Home",
-		new
-		{
-			page=page ,
-			q=ViewBag.q,
-			filterViewModel=Model
-		}),
-		new PagedListRenderOptions
-		{
-			LiElementClasses = new string[] { "page-item" },
-			PageClasses = new string[] { "page-link" }
-		})
-}
+</form>*@
+	                    @*
+	                    
+                    </div>*@
+@*<form asp-controller="Home" asp-action="Search" method="get" asp-route-type="search">
+    <input name="q" type="search" value=@ViewBag.q />
+    <button type="submit">Tìm kiếm</button>
+</form>*@

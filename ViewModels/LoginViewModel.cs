@@ -13,6 +13,6 @@ namespace MangaStore.ViewModels
 		[Display(Name = "Mật khẩu")]
 		public string password { get; set; }
 
-		public string? ReturnUrl { get; set; }
+		public string recaptcha { get; set; }
 	}
 }

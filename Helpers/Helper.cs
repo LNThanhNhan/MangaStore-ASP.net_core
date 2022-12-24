@@ -104,6 +104,5 @@ namespace MangaStore.Helpers
 		{
 			return OrderStatus.getArrayView().FirstOrDefault(x => x.Value == status).Key;
 		}
-		
     }
 }

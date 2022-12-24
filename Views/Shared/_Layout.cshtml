@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="vn">
+<html lang="vi">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,12 +13,17 @@
     <script src="https://kit.fontawesome.com/b9a286660b.js" crossorigin="anonymous"></script>
 </head>
 <body>
-	@RenderBody()
-  
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+<style>
+        table,tr,td{
+            border-collapse: collapse; 
+        }
+</style>
+@RenderBody()
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
 @await RenderSectionAsync("js", required: false)
 </body>
 </html>

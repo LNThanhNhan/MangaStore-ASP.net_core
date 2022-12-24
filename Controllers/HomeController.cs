@@ -49,6 +49,27 @@ namespace MangaStore.Controllers
 				return NotFound();
 			}
 			var productViewModel = _mapper.Map<ProductViewModel>(product);
+			//Lấy ra 3 sản phẩm có cùng tác giả nhưng không cùng id
+			var sameAuthor = new List<ProductViewModel>();
+			var sameAuthorData = _context.Products
+				.Where(p => p.author == product.author && p.id != product.id)
+				.OrderByDescending(p => p.id)
+				.Take(3)
+				.ToList();
+			sameAuthorData.ForEach(
+				pd => sameAuthor.Add(_mapper.Map<ProductViewModel>(pd))
+			); 
+			//Lấy ra 5 sản phẩm có cùng thể loại nhưng không cùng id
+			var sameCategory = new List<ProductViewModel>();
+			var sameCategoryData = _context.Products
+				.Where(p => p.category == product.category && p.id != product.id)
+				.OrderByDescending(p => p.id)
+				.Take(5)
+				.ToList();
+			sameCategoryData.ForEach(
+				pd => sameCategory.Add(_mapper.Map<ProductViewModel>(pd))
+			);
+			//Kiểm tra xem sản phẩm có xem thử hay không
 			if(product.samples.Count != 0)
 			{
 				ViewBag.Sample = "Có";
@@ -57,6 +78,8 @@ namespace MangaStore.Controllers
 			{
 				ViewBag.Sample = "Không";
 			}
+			ViewData["sameAuthor"] = sameAuthor;
+			ViewData["sameCategory"] = sameCategory;
 			return View(productViewModel);
 		}
 
@@ -92,7 +115,7 @@ namespace MangaStore.Controllers
             filterViewModel.max_price = 0;
             //Code phân trang
             var pageNumber = page ?? 1;
-            ViewData["list"] = list.ToPagedList(pageNumber, 16);
+            ViewData["list"] = list.ToPagedList(pageNumber, 12);
             ViewData["q"] = q;
 			ViewBag.Action = "Search";
 			return View(filterViewModel);
@@ -129,7 +152,7 @@ namespace MangaStore.Controllers
             filterViewModel.max_price = 0;
             //Code phân trang
             var pageNumber = page ?? 1;
-            ViewData["list"] = list.ToPagedList(pageNumber, 16);
+            ViewData["list"] = list.ToPagedList(pageNumber, 12);
             ViewData["q"] = q;
 			ViewBag.Action = "Author";
 			ViewBag.Slug = slug;
@@ -164,7 +187,7 @@ namespace MangaStore.Controllers
 	        filterViewModel.max_price = 0;
 	        //Code phân trang
 	        var pageNumber = page ?? 1;
-	        ViewData["list"] = list.ToPagedList(pageNumber, 16);
+	        ViewData["list"] = list.ToPagedList(pageNumber, 12);
 	        ViewData["q"] = q;
 			ViewBag.Action = "HotDeal";
 			return View("Search",filterViewModel);
@@ -211,7 +234,7 @@ namespace MangaStore.Controllers
 	        filterViewModel.max_price = 0;
 	        //Code phân trang
 	        var pageNumber = page ?? 1;
-	        ViewData["list"] = list.ToPagedList(pageNumber, 16);
+	        ViewData["list"] = list.ToPagedList(pageNumber, 12);
 	        ViewData["q"] = q;
 			ViewBag.Action = "Collection";
 			if (slug is not null)
@@ -275,7 +298,7 @@ namespace MangaStore.Controllers
 			}
 			//Code phân trang
 			var pageNumber = page ?? 1;
-			ViewData["list"] = list.ToPagedList(pageNumber, 16);
+			ViewData["list"] = list.ToPagedList(pageNumber, 12);
 			ViewData["q"] = q;
 			ViewBag.Action = "Filter";
 			return View("Search",filterViewModel);

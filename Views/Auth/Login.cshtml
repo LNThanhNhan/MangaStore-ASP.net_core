@@ -1,9 +1,25 @@
 ﻿@using MangaStore.ViewModels
 @model LoginViewModel
-<form asp-action="Login" asp-controller="Auth" method="Post">
+<form id="login-form" asp-action="Login" asp-controller="Auth" method="Post">
 	Email
 	<input type="email" asp-for="email" required />
 	Mật khẩu
-	<input type="password" asp-for="password" required />
+    <input type="password" asp-for="password" required />
+    <input type="hidden" asp-for="recaptcha">
 	<input type="submit" value="Đăng nhập" />
 </form>
+@section js{
+    <script src="https://www.google.com/recaptcha/api.js?render=6Lf_X6IjAAAAAJJs37Rr7TpZr1HKPJYYBh7Vqb3J"></script>
+    <script>
+            grecaptcha.ready(function() {
+                //Thêm sử kiện submit form
+                $('#login-form').on('submit', function(e) {
+                    e.preventDefault();
+                    grecaptcha.execute('6Lf_X6IjAAAAAJJs37Rr7TpZr1HKPJYYBh7Vqb3J', { action: 'login' }).then(function(token) {
+                        document.getElementById('recaptcha').value = token;
+                        document.getElementById('login-form').submit();
+                    })
+                });
+            });
+    </script>
+}

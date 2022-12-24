@@ -7,7 +7,7 @@ using MangaStore.Helpers;
 using MangaStore.Models;
 using MangaStore.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace MangaStore.Controllers
 {
@@ -31,7 +31,7 @@ namespace MangaStore.Controllers
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		[Route("login")]
-		public IActionResult Login(LoginViewModel loginView)
+		public async Task<IActionResult> Login(LoginViewModel loginView)
 		{
 			if (ModelState.IsValid)
 			{
@@ -41,20 +41,27 @@ namespace MangaStore.Controllers
 				{
 					if (Helper.verify_password(loginView.password,account.password))
 					{
-						//Khởi tạo session mới và gán giá trị id của account vào session
-						HttpContext.Session.SetInt32("account_id", account.id);
-						if (account.role == AccountRole.ADMIN)
+						if (await is_recaptcha_valid(loginView.recaptcha))
 						{
-							HttpContext.Session.SetInt32("role", AccountRole.ADMIN);
+							//Khởi tạo session mới và gán giá trị id của account vào session
+							HttpContext.Session.SetInt32("account_id", account.id);
+							if (account.role == AccountRole.ADMIN)
+							{
+								HttpContext.Session.SetInt32("role", AccountRole.ADMIN);
+							}
+							else if (account.role == AccountRole.USER)
+							{
+								HttpContext.Session.SetInt32("role", AccountRole.USER);
+								RedirectToAction("Index", "Home");
+							}
+
+							ViewBag.name = account.username;
+							//ViewBag.id = HttpContext.Session.GetInt32("account_id");
+							return RedirectToAction("Index", "User");
 						}
-						else if (account.role == AccountRole.USER)
-						{
-							HttpContext.Session.SetInt32("role", AccountRole.USER);
-							RedirectToAction("Index", "Home");
-						}
-						ViewBag.name = account.username;
-						//ViewBag.id = HttpContext.Session.GetInt32("account_id");
-						return RedirectToAction("Index", "User");
+						//thêm error vào model state và trả lại view
+						ModelState.AddModelError("recaptcha", "Recaptcha không hợp lệ");
+						return View(loginView);
 					}
 					//thêm error vào model state và trả lại view
 					ModelState.AddModelError("email", "Email hoặc mật khẩu không hợp lệ");
@@ -125,6 +132,37 @@ namespace MangaStore.Controllers
 		{
 			HttpContext.Session.Clear();
 			return RedirectToAction("Index", "Home");
+		}
+		
+		//Làm hàm xử lý recaptcha google với tham số truyền vào là
+		//google recaptcha token
+		[NonAction]
+		public async Task<bool> is_recaptcha_valid(string response)
+		{
+			try
+			{
+				var secret = "6Lf_X6IjAAAAALDrxlO4-z7BTx85SCXqC_HpWih6";
+				using (var client = new HttpClient())
+				{
+					var values = new Dictionary<string, string>
+					{
+						{ "secret", secret },
+						{ "response", response },
+						//Lấy ra địa chỉ ip của người dùng
+						{ "remoteip", HttpContext.Connection.RemoteIpAddress.ToString() }
+					};
+					var content=new FormUrlEncodedContent(values);
+					var verifyResponse =await client.PostAsync("https://www.google.com/recaptcha/api/siteverify", content);
+					var captchaResponse = await verifyResponse.Content.ReadAsStringAsync();
+					var captchaResult = JsonConvert.DeserializeObject<RecaptchaResponse>(captchaResponse);
+					return captchaResult.Success && captchaResult.Score > 0.5;
+				}
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e);
+				return  false;
+			}
 		}
 	}
 }
