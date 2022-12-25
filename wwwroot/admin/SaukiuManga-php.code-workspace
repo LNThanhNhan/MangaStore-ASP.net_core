@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../AdminLTE-3.2.0"
+		},
+		{
+			"path": "../../Sodaubai"
+		},
+		{
+			"path": "../../datatable-order-fixed"
+		}
+	],
+	// "settings": {
+	// 	"liveServer.settings.multiRootWorkspaceName": "SaukiuManga-php",
+	// 	"liveServer.settings.port": 5501
+	// }
+}

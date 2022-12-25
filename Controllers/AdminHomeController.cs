@@ -1,5 +1,7 @@
 ﻿using MangaStore.Data;
 using MangaStore.Enums;
+using MangaStore.Helpers;
+using MangaStore.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MangaStore.Controllers;
@@ -11,39 +13,50 @@ public class AdminHomeController:Controller
     {
         _context = context;
     }
-    public IActionResult Index(DateTime? fromDate, DateTime? toDate,int? category)
+    public IActionResult Index(AdminHomeViewModel? vm)
     {
-        ViewData["category"] = ProductCategory.getArrayView();
-        if (category is null)
+        if (vm is null)
         {
-            category = 0;
+            vm = new AdminHomeViewModel();
+        }
+        //Lấy ra doanh thu hôm nay bằng cách lấy ra tổng tiền của các đơn hàng có delivery_date là ngày hôm nay
+        var today = DateTime.Today.Date;
+        //chỉ so sánh ngày tháng năm
+        var revenueToday = _context.Orders.Where(x => (DateTime)x.delivery_date.Value.Date== today).Sum(x => x.total_price);
+        //Láy ra số đơn hàng đã đặt trong ngày hôm nay
+        var orderCreatedToday = _context.Orders.Where(x => x.order_date.Date == today).Count();
+        //Lấy ra số sản phẩm có số lượng tồn kho nhỏ hơn 100
+        var productOutOfStock = _context.Products.Where(x => x.quantity < 100).Count();
+        //Lấy ra số đơn hàng đang chờ xác nhận
+        var orderProcessing = _context.Orders.Where(x => x.status == OrderStatus.CHO_XAC_NHAN).Count();
+        if (vm.category is null)
+        {
+            vm.category = 0;
         }
         //kiểm tra nếu toDate là hôm nay thì 
         //cộng thêm 1 ngày
-        if (toDate == DateTime.Today)
+        if (vm.toDate !=null &&vm.toDate.Value.Date == today)
         {
-            toDate = toDate.Value.AddDays(1);
+            vm.toDate = vm.toDate.Value.AddDays(1);
+        }
+        //Nếu fromDate và toDate không có giá trị thì khởi tạo
+        //với fromDate là ngày đầu tiên trong năm
+        //với toDate là ngày mai
+        if (vm.fromDate is null && vm.toDate is null)
+        {
+            vm.fromDate = new DateTime(today.Year, 1, 1);
+            vm.toDate = today.AddDays(1);
         }
         //Lấy 10 sản phẩm có doanh thu cao nhất
         //bằng cách lấy tổng total_price của bảng OrderDetails
         //mà có sản phẩm có product.category = category
+        //nếu category = 0 thì lấy tất cả sản phẩm
         //sắp xếp giảm dần và có order_date nằm trong khoảng từ fromDate đến toDate
-        //và tham khảo từ đoạn code bên dưới lấy từ ngôn ngữ PHP trên framework Laravel
-        /*if($category===0 && $toDate!==null && $fromDate!==null){
-            $topProducts = DB::table('order_product')
-                            ->join('products', 'products.id', '=', 'order_product.product_id')
-                        ->join('orders', 'orders.id', '=', 'order_product.order_id')
-                    ->select('products.*', DB::raw('SUM(order_product.total_price) as total_price'))
-                ->whereBetween('orders.order_date', [$fromDate, $toDate])
-                ->groupBy('products.name')
-                        ->orderBy('total_price', 'desc')
-                    ->limit(10)
-                ->get();
-        }*/
         var topProducts = _context.OrderDetails
-            .Where(od => od.Order.order_date >= fromDate && od.Order.order_date <= toDate)
+            .Where(od => od.Order.order_date.Date >= vm.fromDate.Value.Date && od.Order.order_date.Date <= vm.toDate.Value.Date)
+            .Where(vm.category == 0 ? od => true : od => od.product.category == vm.category)
             .GroupBy(od => od.product_id)
-            .Select(od => new
+            .Select(od => new Statistic
             {
                 //Lấy ra tất cả thông tin của sản phẩm và truyền vào Product
                 Product = _context.Products.Where(p => p.id == od.Key).FirstOrDefault(),
@@ -52,7 +65,15 @@ public class AdminHomeController:Controller
             .OrderByDescending(od => od.TotalPrice)
             .Take(10)
             .ToList();
-        var product=topProducts[0].Product;
-        return View();
+        ViewBag.arrCategory = ProductCategory.getArrayView();
+        ViewBag.category = vm.category;
+        ViewBag.fromDate = vm.fromDate;
+        ViewBag.toDate = vm.toDate;
+        ViewBag.revenueToday = revenueToday;
+        ViewBag.orderCreatedToday = orderCreatedToday;
+        ViewBag.productOutOfStock = productOutOfStock;
+        ViewBag.orderProcessing = orderProcessing;
+        ViewBag.topProducts = topProducts;
+        return View(vm);
     }
 }
