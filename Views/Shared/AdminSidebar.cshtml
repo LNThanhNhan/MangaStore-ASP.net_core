@@ -62,7 +62,7 @@
                 <!-- Add icons to the links using the .nav-icon class
        with font-awesome or any other icon font library -->
                 <li class="nav-item">
-                    <a href="{{route('home.index')}}" class="nav-link active">
+                    <a href="/" class="nav-link active">
                         <p>Trang cửa hàng </p>
                     </a>
                 </li>
@@ -199,7 +199,7 @@
                     </a>
                     <ul class="nav nav-treeview" style="display: block;">
                         <li class="nav-item">
-                            <a href="{{route('admin.users.index')}}" class="nav-link">
+                            <a asp-controller="AdminUser" asp-action="Index" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Danh sách khách hàng</p>
                             </a>

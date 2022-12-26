@@ -30,7 +30,7 @@ namespace MangaStore.Controllers
 		{
 			//Code thường
 			var list = new List<ProductViewModel>();
-			_context.Products.ToList().ForEach
+			_context.Products.OrderByDescending(p=>p.id).ToList().ForEach
 			(
 				pd => list.Add(_mapper.Map<ProductViewModel>(pd))
 			);
@@ -63,6 +63,7 @@ namespace MangaStore.Controllers
                 Product newProduct = _mapper.Map<Product>(product);
                 _context.Products.Add(newProduct);
                 _context.SaveChanges();
+                TempData["success"] = "Thêm thành công";
                 return RedirectToAction("Index");
             }
             ModelState.Clear();
@@ -93,6 +94,7 @@ namespace MangaStore.Controllers
 				Product editProduct = _mapper.Map<Product>(product);
 				_context.Products.Update(editProduct);
 				_context.SaveChanges();
+				TempData["success"] = "Sửa thành công";
 				return RedirectToAction("Index");
 			}
 			ModelState.Clear();
@@ -112,6 +114,7 @@ namespace MangaStore.Controllers
 			}
 			_context.Products.Remove(product);
 			_context.SaveChanges();
+			TempData["success"] = "Xóa thành công";
 			return RedirectToAction("Index");
 		}
 	}

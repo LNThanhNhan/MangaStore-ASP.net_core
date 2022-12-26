@@ -192,6 +192,39 @@ namespace MangaStore.Controllers
 			ViewBag.Action = "HotDeal";
 			return View("Search",filterViewModel);
         }
+        
+        [HttpGet]
+        public IActionResult Category(int category,string?q, int? page, SearchFilterViewModel? filterViewModel)
+        {
+	        //Truy vấn sản phẩm theo category
+	        var list = new List<ProductViewModel>();
+	        var products = _context.Products.ToList()
+		        .Where(p => p.quantity >0 && p.category == category)
+		        .ToList();
+	        products.ForEach(pd => list.Add(_mapper.Map<ProductViewModel>(pd)));
+	        //Tạo filter nếu chưa có và thực hiện filter
+	        if (filterViewModel is null)
+	        {
+		        filterViewModel = new SearchFilterViewModel();
+	        }
+	        filterViewModel.Categories = new List<CheckBoxItem>();
+	        filterViewModel.Categories=ProductCategory.getArrayView().Select(
+		        item => new CheckBoxItem
+		        {
+			        Value = item.Value,
+			        Display = item.Key,
+			        IsChecked = false
+		        }
+	        ).ToList();
+	        filterViewModel.min_price = 0;
+	        filterViewModel.max_price = 0;
+	        //Code phân trang
+	        var pageNumber = page ?? 1;
+	        ViewData["list"] = list.ToPagedList(pageNumber, 12);
+	        ViewData["q"] = q;
+	        ViewBag.Action = "Category";
+	        return View("Search",filterViewModel);
+        }
 
         [HttpGet]
         [Route("/Home/Collection/{slug?}")]

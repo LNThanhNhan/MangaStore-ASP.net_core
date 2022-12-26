@@ -47,6 +47,12 @@
                         THÔNG TIN TÀI KHOẢN
                     </label>
                 </div>
+                @if(TempData["success"] != null)
+                {
+                	<div class="alert alert-success">
+                		@TempData["success"]
+                	</div>
+                }
                 <div class="hoten">
                     <div class="lbhoten">
                         <label for="lbhoten">

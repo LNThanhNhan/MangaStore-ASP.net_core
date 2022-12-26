@@ -82,7 +82,9 @@
                     </div>
                     <div class="lbten">
                         <label for="lbten">
-                            @Model.category_name
+                            <a asp-controller="Home" asp-action="Category" asp-route-category="@Model.category" style="text-decoration: none">
+                                @Model.category_name
+                            </a>
                         </label>
                     </div>
                 </div>

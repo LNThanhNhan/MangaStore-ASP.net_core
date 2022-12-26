@@ -103,7 +103,7 @@
 			        @foreach (var product in list)
 			        {
 				        <div class="thongtincacsp">
-					        <a href="" class="sanphamtruyen">
+					        <a asp-controller="Home" asp-action="Detail" asp-route-slug="@product.slug" class="sanphamtruyen">
 						        <div class="imagesp">
 							        <img src="@product.image" class="imgsp">
 						        </div>

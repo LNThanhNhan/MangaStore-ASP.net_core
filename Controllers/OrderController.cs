@@ -146,6 +146,16 @@ public class OrderController:Controller
         return RedirectToAction("Index", "User");
     }
     
+    [HttpGet]
+    public IActionResult Detail(int id)
+    {
+        var order = _context.Orders
+            .Include(o => o.order_details)
+            .ThenInclude(od => od.product)
+            .FirstOrDefault(o => o.id == id);
+        return View(order);
+    }
+    
     [HttpPost]
     public IActionResult CancelOrder(int id)
     {

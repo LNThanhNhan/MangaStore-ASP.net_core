@@ -121,5 +121,12 @@ namespace MangaStore.Helpers
 		{
 			return date.ToString("dd/MM/yyyy HH:mm:ss");
 		}
+		
+		//Làm hàm lấy ra tên giới tính nếu là 1 thì là Nam
+		//còn là 0 thì là Nữ
+		public static string gender_name(int gender)
+		{
+			return gender == 1 ? "Nam" : "Nữ";
+		}
     }
 }

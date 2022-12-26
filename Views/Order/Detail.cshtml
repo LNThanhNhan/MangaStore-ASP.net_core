@@ -1,0 +1,309 @@
+﻿@using Microsoft.AspNetCore.Http;
+@using MangaStore.Helpers
+@model Order
+
+@section css{
+    <link href="~/css/ChiTietDonHang.css" rel="stylesheet" />
+}
+<div class="containerChiTietDonHang">
+    <partial name="Header"/>
+    <div class="contentChiTietDonHang">
+        <table class="tbcontentctdh">
+            <tr>
+                <td class="tdTenTK">
+                    <div class="tableTaiKhoan">
+                        <table class="tbTaiKhoan">
+                            <tr>
+                                <td class="tdTen">
+                                    <div class="lbTenTK">
+                                        <label for="tentk">
+                                            @Context.Session.GetString("username")
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdThongTinCaNhan">
+                                    <div class="btnTTCN">
+                                        <a asp-controller="User" asp-action="Index">
+                                            <button class="btnThongTinCaNhan">
+                                                Thông tin cá nhân
+                                            </button>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdDanhSachDonHang">
+                                    <div class="btnDSDH">
+                                        <a asp-controller="Order" asp-action="Index">
+                                            <button class="btnDanhSachDonHang">
+                                                Danh sách đơn hàng
+                                            </button>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdThoat">
+                                    <div class="btnThoat">
+                                        <form asp-controller="Auth" asp-action="Logout" method="post">
+                                            <button type="submit" class="btnExit">
+                                                Đăng xuất
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            <td class="divhr">
+                <hr class="hr" width="0.5" size="180">
+            </td>
+            <td class="tdchitietdh">
+                <div class="tbthongtindonhang">
+                    <table class="tablettdh">
+                        <tr>
+                            <td class="tdtbngaythang">
+                                <div class="tbngaythang">
+                                    <table class="tablengaythang">
+                                        <tr>
+                                            <td class="back">
+                                                <div class="btnback">
+                                                    <i class="fa-solid fa-circle-arrow-left"></i>
+                                                </div>
+                                            </td>
+                                            <td class="madh">
+                                                <div class="lbdonhang">
+                                                    <label for="lbdh">
+                                                        ĐƠN HÀNG: <a asp-controller="Order" asp-action="Detail" asp-route-id="@Model.id" class="hrefmadh">#@Model.id</a> |  Ngày đặt: @Helper.format_date(@Model.order_date)
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td class="buttondagiao">
+                                                <div class="btndagiao">
+                                                    <button class="dagiao">
+                                                        @Helper.order_status_name(@Model.status)
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="chitietsanphamdh">
+                                <div class="tbchitietsp">
+                                    <table class="tablechitietsp">
+                                        <tr>
+                                            <td class="tdname">Tên sản phẩm</td>
+                                            <td class="tdsoluong">Số lượng</td>
+                                            <td class="tdgia">Giá niêm yết</td>
+                                            <td class="tdthanhtien">Thành tiền</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tbsp" colspan="4">
+                                                <div class="listsp">
+                                                    <ul>
+                                                    @foreach (var item in Model.order_details)
+                                                    {
+                                                        <li>
+                                                            <div class="tbspmua">
+                                                                <table class="tablesp">
+                                                                    <tr>
+                                                                        <td class="tdtentruyen">
+                                                                            <div class="tentruyen">
+                                                                                <a href="" class="hreftentuyen">
+                                                                                    @item.product.name
+                                                                                </a>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td class="tdsl">
+                                                                            <div class="soluong">
+                                                                                <label for="lbsl">
+                                                                                    @item.quantity
+                                                                                </label>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td class="tdgiasp">
+                                                                            <div class="giasp">
+                                                                                <label for="lbgia">
+                                                                                    @Helper.format_VND(item.price)
+                                                                                </label>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td class="tdthanhtiensp">
+                                                                            <div class="giathanhtien">
+                                                                                <label for="lbthanhtien">
+                                                                                    @Helper.format_VND(item.price * item.quantity)
+                                                                                </label>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            </div>
+                                                        </li>
+                                                    }
+                                                    </ul>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="tddivhr2" colspan="4">
+                                                        <div class="divhr2">
+                                                            <hr class="hr2">
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="tddivhr2" colspan="4">
+                                                        <div class="divhr2">
+                                                            <hr class="hr2">
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="tdmagiamkhuyenmai" colspan="2">
+                                                        <div class="magiamkhuyenmai">
+                                                            <label for="lbmgkm">
+                                                                Tổng giá trị sản phẩm
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td colspan="2" class="tdgiagiamkm">
+                                                        <div class="giagiamkm">
+                                                            <label for="lbgiakm">
+                                                                @Helper.format_VND(Model.total_order)
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            <tr>
+                                                <td class="tddivhr2" colspan="4">
+                                                    <div class="divhr2">
+                                                        <hr class="hr2">
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tddivhr2" colspan="4">
+                                                    <div class="divhr2">
+                                                        <hr class="hr2">
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tdmagiamkhuyenmai" colspan="2">
+                                                    <div class="magiamkhuyenmai">
+                                                        <label for="lbmgkm">
+                                                            Phí vận chuyển
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                                <td colspan="2" class="tdgiagiamkm">
+                                                    <div class="giagiamkm">
+                                                        <label for="lbgiakm">
+                                                            +@Helper.format_VND(Model.delivery_fee)
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tddivhr2" colspan="4">
+                                                    <div class="divhr2">
+                                                        <hr class="hr2">
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tdmagiamkhuyenmaisum" colspan="2">
+                                                    <div class="magiamkhuyenmaisum">
+                                                        <label for="lbmgkmsum">
+                                                            Tổng thanh toán
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                                <td colspan="2" class="tdgiagiamkmsum">
+                                                    <div class="giagiamkmsum">
+                                                        <label for="lbgiakmsum">
+                                                            @Helper.format_VND(Model.total_price)
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdthongtinnguoinhan">
+                                    <div class="ttnn">
+                                        <label for="lbttnn">
+                                            Thông tin nhận hàng
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                                <tr>
+                                    <td class="thongtinnhanhang" colspan="4">
+                                        <div class="tbthongtinnhanhang">
+                                            <table class="tablenhanhang">
+                                                <tr>
+                                                    <td class="tdngnhan">
+                                                        <div class="ngnhan">
+                                                            <label for="ten">
+                                                                Tên người nhận: <a href="" class="hrefngnhan">@Model.name</a>
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="tdngnhan">
+                                                        <div class="ngnhan">
+                                                            <label for="emailngnhan">
+                                                                Email: <a href="" class="hrefngnhan">@Model.name</a>
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="tdngnhan">
+                                                        <div class="ngnhan">
+                                                            <label for="sdtngnhan">
+                                                                Số điện thoại: <a href="" class="hrefngnhan">@Model.phone</a>
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="tdngnhan">
+                                                        <div class="ngnhan">
+                                                            <label for="httt">
+                                                                Phương thức thanh toán: <a href="" class="hrefngnhan">@Helper.payment_method_short_name(Model.payment_method)</a>
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="tdngnhan">
+                                                        <div class="ngnhan">
+                                                            <label for="dcgh">
+                                                                Địa chỉ giao hàng: <a href="" class="hrefngnhan">@(Model.address + ", "+ Helper.province_name(Model.province))</a>
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    <partial name="Footer"/>
+</div>

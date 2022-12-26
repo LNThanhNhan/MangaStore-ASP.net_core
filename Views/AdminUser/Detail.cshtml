@@ -1,0 +1,116 @@
+﻿@using MangaStore.Helpers
+@using System.Net.Mime
+@model User
+@{
+    Layout = "~/Views/Shared/Admin.cshtml";
+}
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Thông tin khách hàng </h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+                        <li class="breadcrumb-item active">Thông tin khách hàng</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-12 ">
+                <!-- general form elements -->
+                <div class="card card-primary">
+
+                    <!-- /.card-header -->
+                    <!-- form start -->
+                    <form>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card-body">
+
+                                    <div class="form-group">
+                                        <label for="name">Họ tên</label>
+                                        <input type="text" class="form-control" id="name" placeholder="" asp-for="name" value="@Model.name">
+                                    </div>
+                                    <div class="radio">
+                                        <label for="gender">Giới tính</label>
+                                        <a>
+                                            <input type="radio" asp-for="gender" id="inputgender" value="1" checked="checked">
+                                            Nam
+                                        </a>
+                                        <a>
+                                            <input type="radio" asp-for="gender" id="inputgender" value="0">
+                                            Nữ
+                                        </a>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email">Email</label>
+                                        <input type="email" class="form-control" id="email" placeholder="" asp-for="@Model.account.email" >
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="phone">Số điện thoại </label>
+                                        <input type="text" class="form-control" id="phone" placeholder="" 
+                                               @if(@Model.phone != null) 
+                                                {
+                                                <text>value="@Model.phone" ></text>
+                                               }
+                                               else
+                                               {
+                                                   <text>value="Chưa cập nhật" ></text> 
+                                               }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card-body">
+
+                                    <div class="form-group">
+                                        <label for="quantity">Địa chỉ giao hàng</label>
+                                        <input type="text" class="form-control" id="address" placeholder="" name="address"
+                                               @if(@Model.address != null) 
+                                               {
+                                               <text>value="@Model.address" ></text>
+                                              }
+                                              else
+                                              {
+                                                  <text>value="Chưa cập nhật" </text> 
+                                              }
+                                        >
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="province">Tỉnh/ thành</label>
+                                        <input type="text" class="form-control" id="province" placeholder="" name="province"
+                                               @if(@Model.province != null && @Model.province != 0)
+                                                {
+                                              <text>value="@Helper.province_name(Model.province)" ></text>
+                                             }
+                                             else
+                                             {
+                                                 <text>value="Chưa cập nhật" </text> 
+                                             }
+                                        >
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- /.card-body -->
+
+                            <div class="card-footer">
+
+                                <a asp-controller="AdminUser" asp-action="Index" type="cancel" class="btn btn-success ">Quay lại</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
