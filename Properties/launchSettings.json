@@ -3,7 +3,8 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:39982",
+      //Change to custom URL
+      "applicationUrl": "http://mangastore.test",
       "sslPort": 0
     }
   },
