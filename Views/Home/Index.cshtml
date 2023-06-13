@@ -1,7 +1,7 @@
 ﻿@using MangaStore.ViewModels
 @{
     ViewData["Title"] = "Home Page";
-	List<ProductViewModel> list = ViewData["list"] as List<ProductViewModel>;
+	List<ProductViewModel> list = ViewData["list"] as List<ProductViewModel> ?? new List<ProductViewModel>();
 }
 @section css{
 	<link rel="stylesheet" href="~/css/TrangChu.css" asp-append-version="true" />
@@ -65,11 +65,12 @@
                     <div class="tbtatcasp">
                         <table class="tatcasp">
 	                        <tr>
-		                        @foreach (var item in list.Select((value, i) => new { i, value }))
+		                        @foreach (var productViewModel in list.Select((value, index) => new { index, value }))
 		                        {
-			                        var product = item.value;
-			                        var index = item.i;
-			                        if(index<=4)
+			                        var product = productViewModel.value;
+                                    var currentIndex = productViewModel.index;
+                                    int maxProductInRow = 4;
+                                    if (currentIndex <= maxProductInRow)
 			                        {
 				                        <td class="tdsp">
 					                        <a asp-controller="Home" asp-action="Detail" asp-route-slug="@product.slug" style="text-decoration: none">

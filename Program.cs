@@ -7,25 +7,29 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-// Add dbcontext
+
+// Add dbcontext for connect to database
 builder.Services.AddDbContext<Context>
 (
 	options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
-// Add razor runtime compilation
+// Enable hot reload cshtml file
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
-// Add auto mapper 
+
+// Add auto mapper for mapping object
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-// Add fluent API
+
+// Add fluent API for validation
 builder.Services.AddFluentValidation(conf =>
 {
     conf.RegisterValidatorsFromAssembly(typeof(Program).Assembly);
     //để giá trị là false để manual validate
     conf.AutomaticValidationEnabled = false;
 });
-//Add session
+
 builder.Services.AddDistributedMemoryCache();
 
+//Add session for store data
 builder.Services.AddSession(options =>
 {
 	options.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -52,6 +56,7 @@ app.UseSession();
 //thì sẽ kiểm tra session có tồn tại hay không
 //Nếu chưa thì sẽ điều hướng sang route login
 app.UseMiddleware<AuthMiddleware>();
+
 app.MapControllerRoute(
 	name: "default",
 	pattern: "{controller=Home}/{action=Index}/{id?}");

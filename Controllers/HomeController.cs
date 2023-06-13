@@ -23,17 +23,17 @@ namespace MangaStore.Controllers
 		{
 			//Lấy ra 10 sản phẩm mới nhất mà có số lượng lớn hơn 0
 			//rồi chuyển sang list ProductViewModel để hiển thị
-			var list = new List<ProductViewModel>();
-			var products = _context.Products
-				.Where(p => p.quantity > 0)
-				.OrderByDescending(p => p.id)
+			var ListProductViewModel = new List<ProductViewModel>();
+			var Top10NewestProduct = _context.Products
+				.Where(product => product.quantity > 0)
+				.OrderByDescending(product => product.id)
 				.Take(10)
 				.ToList();
-			products.ForEach
+			Top10NewestProduct.ForEach
 			(
-				pd => list.Add(_mapper.Map<ProductViewModel>(pd))
+                product => ListProductViewModel.Add(_mapper.Map<ProductViewModel>(product))
 			);
-			ViewData["list"] = list;
+			ViewData["list"] = ListProductViewModel;
 			return View();
 		}
 		
