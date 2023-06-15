@@ -5,7 +5,7 @@
     "iisExpress": {
       //Change to custom URL
       "applicationUrl": "http://mangastore.test",
-      "sslPort": 0
+      //"sslPort": 443
     }
   },
   "profiles": {

@@ -150,13 +150,13 @@ namespace MangaStore.Controllers
 						{ "secret", secret },
 						{ "response", response },
 						//Lấy ra địa chỉ ip của người dùng
-						{ "remoteip", HttpContext.Connection.RemoteIpAddress.ToString() }
+						{ "remoteip", HttpContext.Connection!.RemoteIpAddress!.ToString() }
 					};
 					var content=new FormUrlEncodedContent(values);
 					var verifyResponse =await client.PostAsync("https://www.google.com/recaptcha/api/siteverify", content);
 					var captchaResponse = await verifyResponse.Content.ReadAsStringAsync();
 					var captchaResult = JsonConvert.DeserializeObject<RecaptchaResponse>(captchaResponse);
-					return captchaResult.Success && captchaResult.Score > 0.5;
+					return captchaResult!.Success && captchaResult.Score > 0.5;
 				}
 			}
 			catch (Exception e)
