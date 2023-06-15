@@ -147,12 +147,13 @@ namespace MangaStore.Controllers
 				var secret = Token.recaptcha_secret;
 				using (var client = new HttpClient())
 				{
-					var values = new Dictionary<string, string>
+					var ipAddress = _httpContextAccessor!.HttpContext!.Request.Headers["X-Forwarded-For"];
+                    var values = new Dictionary<string, string>
 					{
 						{ "secret", secret },
 						{ "response", response },
 						//Lấy ra địa chỉ ip của người dùng
-						{ "remoteip", _httpContextAccessor!.HttpContext!.Request.Headers["X-Forwarded-For"] }
+						{ "remoteip",ipAddress }
 					};
 					var content=new FormUrlEncodedContent(values);
 					var verifyResponse =await client.PostAsync("https://www.google.com/recaptcha/api/siteverify", content);
