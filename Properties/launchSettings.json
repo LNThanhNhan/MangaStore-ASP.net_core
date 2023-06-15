@@ -4,8 +4,7 @@
     "anonymousAuthentication": true,
     "iisExpress": {
       //Change to custom URL
-      "applicationUrl": "http://mangastore.test",
-      //"sslPort": 443
+      "applicationUrl": "https://mangastore.test"
     }
   },
   "profiles": {
