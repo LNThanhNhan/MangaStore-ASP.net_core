@@ -10,15 +10,17 @@ namespace MangaStore.Controllers
     public class CartController : Controller
     {
         private readonly Context _context;
-        public CartController(Context context)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public CartController(Context context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpPost]
         public IActionResult AddToCart(IFormCollection form)
         {
-            int accountID = (int)HttpContext.Session.GetInt32("account_id");  
+            int accountID = (int)_httpContextAccessor!.HttpContext!.Session.GetInt32("account_id");  
             int productId = int.Parse(form["productId"]);
             int quantity = int.Parse(form["quantity"]);
             var product = _context.Products.FirstOrDefault(p=>p.id==productId);
@@ -35,7 +37,7 @@ namespace MangaStore.Controllers
                 response.message = "Số lượng không đủ";
                 return Json(response);
             }
-            User user = _context.Users
+            User user = _context!.Users
                 .Include(user=>user.cart)
                 .ThenInclude(cart=>cart.cart_details.Where(cart_detail=>cart_detail.product_id==productId))
                 .FirstOrDefault(u=>u.account_id==accountID);
@@ -74,7 +76,7 @@ namespace MangaStore.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            int accountID = (int)HttpContext.Session.GetInt32("account_id");
+            int accountID = (int)_httpContextAccessor!.HttpContext!.Session.GetInt32("account_id");
             User user = _context.Users
                 .Include(user=>user.cart)
                 .ThenInclude(cart=>cart.cart_details)
@@ -92,8 +94,8 @@ namespace MangaStore.Controllers
         //Cập nhật số lượng của từng sản phẩm trong giỏ hàng
         public IActionResult UpdateCart(int[]arr)
         {
-            int accountID = (int)HttpContext.Session.GetInt32("account_id");
-            User user = _context.Users
+            int accountID = (int)_httpContextAccessor!.HttpContext!.Session.GetInt32("account_id");
+            User user = _context!.Users
                 .Include(user=>user.cart)
                 .ThenInclude(cart=>cart.cart_details)
                 .ThenInclude(cart_detail=>cart_detail.product)
@@ -112,7 +114,7 @@ namespace MangaStore.Controllers
         //hàm DeleteCartItem dùng để xóa 1 sản phẩm trong giỏ hàng
         public IActionResult DeleteCartItem(int id)
         {
-            int accountID = (int)HttpContext.Session.GetInt32("account_id");
+            int accountID = (int)_httpContextAccessor!.HttpContext!.Session.GetInt32("account_id");
             User user = _context.Users
                 .Include(user=>user.cart)
                 .ThenInclude(cart=>cart.cart_details)

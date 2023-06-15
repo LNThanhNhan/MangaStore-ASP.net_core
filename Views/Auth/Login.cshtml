@@ -83,13 +83,13 @@
 	<input type="submit" value="Đăng nhập" />
 </form>*@
 @section js{
-    <script src="https://www.google.com/recaptcha/api.js?render=6Lf_X6IjAAAAAJJs37Rr7TpZr1HKPJYYBh7Vqb3J"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=@Token.recaptcha_sitekey"></script>
     <script>
             grecaptcha.ready(function() {
                 //Thêm sử kiện submit form
                 $('#login-form').on('submit', function(e) {
                     e.preventDefault();
-                    grecaptcha.execute('6Lf_X6IjAAAAAJJs37Rr7TpZr1HKPJYYBh7Vqb3J', { action: 'login' }).then(function(token) {
+                    grecaptcha.execute('@Token.recaptcha_sitekey', { action: 'login' }).then(function(token) {
                         document.getElementById('recaptcha').value = token;
                         document.getElementById('login-form').submit();
                     })

@@ -9,14 +9,16 @@ namespace MangaStore.Controllers;
 public class UserController:Controller
 {
     private readonly Context _context;
-    public UserController(Context context)
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    public UserController(Context context, IHttpContextAccessor httpContextAccessor)
     {
         _context = context;
+        _httpContextAccessor = httpContextAccessor;
     }
     
     public IActionResult Index()
     {
-        int id = HttpContext.Session.GetInt32("account_id") ?? 0;
+        int id = _httpContextAccessor!.HttpContext!.Session.GetInt32("account_id") ?? 0;
         User user= _context.Users.Include(u=>u.account).FirstOrDefault(u=>u.account_id==id);
         ViewData["provinces"] = Province.getArrayView();
         return View(user);

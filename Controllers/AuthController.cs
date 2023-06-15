@@ -15,13 +15,15 @@ namespace MangaStore.Controllers
 	{
 		private readonly Context _context;
 		private readonly IValidator<RegisterViewModel> _registerView;
-		public AuthController(Context context, IValidator<RegisterViewModel> registerView)
-		{
-			_context = context;
-			_registerView = registerView;
-		}
-		
-		[HttpGet]
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public AuthController(Context context, IValidator<RegisterViewModel> registerView, IHttpContextAccessor httpContextAccessor)
+        {
+            _context = context;
+            _registerView = registerView;
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        [HttpGet]
 		[Route("login",Name = "login")]
 		public IActionResult Login()
 		{
@@ -44,20 +46,19 @@ namespace MangaStore.Controllers
 						if (await is_recaptcha_valid(loginView.recaptcha))
 						{
 							//Khởi tạo session mới và gán giá trị id của account vào session
-							HttpContext.Session.SetInt32("account_id", account.id);
-							HttpContext.Session.SetString("username", account.username);
+							_httpContextAccessor!.HttpContext!.Session.SetInt32("account_id", account.id);
+							_httpContextAccessor!.HttpContext!.Session.SetString("username", account.username);
 							if (account.role == AccountRole.ADMIN)
 							{
-								HttpContext.Session.SetInt32("role", AccountRole.ADMIN);
+								_httpContextAccessor!.HttpContext!.Session.SetInt32("role", AccountRole.ADMIN);
 							}
 							else if (account.role == AccountRole.USER)
 							{
-								HttpContext.Session.SetInt32("role", AccountRole.USER);
+								_httpContextAccessor!.HttpContext!.Session.SetInt32("role", AccountRole.USER);
 								RedirectToAction("Index", "Home");
 							}
 
 							ViewBag.name = account.username;
-							//ViewBag.id = HttpContext.Session.GetInt32("account_id");
 							return RedirectToAction("Index", "User");
 						}
 						//thêm error vào model state và trả lại view
@@ -90,6 +91,7 @@ namespace MangaStore.Controllers
 			ValidationResult result = _registerView.Validate(registerView);
 			if (result.IsValid)
 			{
+				_httpContextAccessor!.HttpContext!.Session.Clear();
 				//Tạo mới account
 				var account_db = new Account
 				{
@@ -117,9 +119,9 @@ namespace MangaStore.Controllers
 				_context.Carts.Add(cart);
 				_context.SaveChanges();
 				//Khởi tạo session mới và gán giá trị id của account vào session
-				HttpContext.Session.SetInt32("account_id", account_db.id);
+				_httpContextAccessor!.HttpContext!.Session.SetInt32("account_id", account_db.id);
 				ViewBag.name = user.name;
-				ViewBag.id = HttpContext.Session.GetInt32("account_id");
+				ViewBag.id = _httpContextAccessor!.HttpContext!.Session.GetInt32("account_id");
 				return RedirectToAction("Index", "Home");
 			}
 			ModelState.Clear();
@@ -131,7 +133,7 @@ namespace MangaStore.Controllers
 		[Route("logout")]
 		public IActionResult Logout()
 		{
-			HttpContext.Session.Clear();
+			_httpContextAccessor!.HttpContext!.Session.Clear();
 			return RedirectToAction("Index", "Home");
 		}
 		
@@ -142,7 +144,7 @@ namespace MangaStore.Controllers
 		{
 			try
 			{
-				var secret = "6Lf_X6IjAAAAALDrxlO4-z7BTx85SCXqC_HpWih6";
+				var secret = Token.recaptcha_secret;
 				using (var client = new HttpClient())
 				{
 					var values = new Dictionary<string, string>
@@ -150,7 +152,7 @@ namespace MangaStore.Controllers
 						{ "secret", secret },
 						{ "response", response },
 						//Lấy ra địa chỉ ip của người dùng
-						{ "remoteip", HttpContext.Connection!.RemoteIpAddress!.ToString() }
+						{ "remoteip", _httpContextAccessor!.HttpContext!.Request.Headers["X-Forwarded-For"] }
 					};
 					var content=new FormUrlEncodedContent(values);
 					var verifyResponse =await client.PostAsync("https://www.google.com/recaptcha/api/siteverify", content);

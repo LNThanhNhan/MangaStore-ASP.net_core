@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Http;
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 <div class="header">
     <table class="tbheader">
         <tr>
@@ -14,9 +15,9 @@
             </td>
             <td class="tddndk">
                 <div class="dndk">
-                    @if (Context.Session.GetString("username") is not null)
+                    @if (@HttpContextAccessor!.HttpContext!.Session.GetString("username") is not null)
                     {
-                        <a asp-controller="User" asp-action="Index" class="link">@Context.Session.GetString("username")</a>
+                        <a asp-controller="User" asp-action="Index" class="link">@HttpContextAccessor!.HttpContext!.Session.GetString("username")</a>
                     }
                     else
                     {

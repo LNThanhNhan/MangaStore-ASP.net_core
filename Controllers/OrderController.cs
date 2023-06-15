@@ -6,7 +6,6 @@ using MangaStore.Enums;
 using MangaStore.Models;
 using MangaStore.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace MangaStore.Controllers;
@@ -15,10 +14,12 @@ public class OrderController:Controller
 {
     private readonly  Context _context;
     private readonly IValidator<OrderViewModel> _validator;
-    public OrderController(Context context,IValidator<OrderViewModel> validator)
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    public OrderController(Context context,IValidator<OrderViewModel> validator,IHttpContextAccessor httpContextAccessor)
     {
         _context = context;
         _validator = validator;
+        _httpContextAccessor = httpContextAccessor;
     }
     
     [HttpGet]
@@ -35,7 +36,7 @@ public class OrderController:Controller
     [HttpGet]
     public IActionResult Checkout()
     {
-        int id=HttpContext.Session.GetInt32("account_id")??0;
+        int id= _httpContextAccessor!.HttpContext!.Session.GetInt32("account_id")??0;
         var user=_context.Users
             .Include(u=>u.account)
             .Include(u=>u.cart)
@@ -79,7 +80,7 @@ public class OrderController:Controller
             TempData["error"] = "Vui lòng điền đầy đủ thông tin";
             return RedirectToAction("Checkout");
         }
-        int id=HttpContext.Session.GetInt32("account_id")??0;
+        int id=_httpContextAccessor!.HttpContext!.Session.GetInt32("account_id")??0;
         var user=_context.Users
             .Include(u=>u.account)
             .Include(u=>u.cart)
