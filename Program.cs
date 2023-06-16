@@ -1,6 +1,7 @@
 ﻿using FluentValidation.AspNetCore;
 using MangaStore.Data;
 using MangaStore.Middlewares;
+using MangaStore.Services.VnPay.Interface;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +27,13 @@ builder.Services.AddFluentValidation(conf =>
     //để giá trị là false để manual validate
     conf.AutomaticValidationEnabled = false;
 });
+
+// Add Configuration file location
+builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory()) 
+    .AddJsonFile("appsettings.json");
+//Add VNPAY service
+builder.Services.AddScoped<IVnPayService, VnPayService>();
 
 builder.Services.AddDistributedMemoryCache();
 

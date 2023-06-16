@@ -133,19 +133,17 @@
                         </div>
                         <div class="thanhtoan" onclick="hienvizalopay()" ondblclick="anvizalopay()">
                             <input type="radio" value="3" asp-for="payment_method" class="radiott">
-                            <p class="pttt">
-                                <img src="~/image/zalopay.png" class="pt">
+                                <img src="~/image/vnpay_logo.svg" >
                                 <label class="tt">
-                                    Ví điện tử ZaloPay
+                                    Ví điện tử VNPAY
                                 </label>
-                            </p>
                         </div>
                         <div id="hidevizalopay">
                             <div class="vizalopay">
                                 <div class="labelstk">
                                     <label for="stk">
-                                        Khi lựa chọn phương thức thanh toán Chuyển khoản qua ví ZaloPay, bạn vui lòng<br>
-                                        chuyển 100% giá trị đơn hàng vào tài khoản ZaloPay với số điện thoại dưới đây:<br>
+                                        Khi lựa chọn phương thức thanh toán Chuyển khoản qua ví VNPAY, bạn vui lòng<br>
+                                        chuyển 100% giá trị đơn hàng vào tài khoản VNPAY với số điện thoại dưới đây:<br>
                                         Tên tài khoản: SÂUKIU MANGA STORE <br>
                                         SĐT: 0374540896<br>
                                         Khi chuyển khoản, vui lòng để rõ Tên - Mã Đơn hàng - SĐT vào phần Lời nhắn.
@@ -258,88 +256,6 @@
         </div>    
     <partial name="Footer"/>
 </div>
-@*<div style="display:flex">
-    <div>
-        @if (TempData["error"] is not null)
-        {
-            <div class="alert alert-danger">
-                <p>@TempData["error"]</p>
-            </div>
-        }
-        <div asp-validation-summary="All" class="text-danger"></div>
-        <form asp-controller="Order" asp-action="Checkout" method="POST">
-            Họ tên <input type="text" asp-for="name" value="@user.name">
-            <br>
-            Email <input type="text" asp-for="email" value="@user.account.email">
-            <br>
-            Số điện thoại <input type="text" asp-for="phone" value="@user.phone">
-            <br>
-            <label for="">Tỉnh/Thành phố</label>
-            <select asp-for="province">
-                <option value="0" selected>-- Chọn tỉnh/thành phố --</option>
-                @if (provinces is not null)
-                {
-                    foreach (var province in provinces)
-                    {
-                        <option value="@province.Value">@province.Key</option>
-                    }
-                }
-            </select>
-            <br>
-            Địa chỉ <input type="text" asp-for="address" value="@user.address">
-            <br>
-            Phương thức thanh toán <br>
-            <input type="radio" asp-for="payment_method" value="1" checked> Thanh toán khi nhận hàng (COD) <br>
-            <input type="radio" asp-for="payment_method" value="2"> Chuyển khoản qua ngân hàng <br>
-            <input type="radio" asp-for="payment_method" value="3"> Thanh toán qua ví điện tử ZaloPay <br>
-            <input type="submit" value="Hoàn tất đơn hàng">
-        </form>
-    </div>
-    <div style="margin-left: 200px">
-        <table >
-            <tbody>
-            @if (cart_details is not null)
-            {
-                @foreach (var cart_detail in cart_details)
-                {
-                    <tr>
-                        <td>
-                            <img src="@cart_detail.product.image" alt="Ảnh minh họa sản phẩm" width="100" height="150">
-                        </td>
-                        <td>
-                            <p>@cart_detail.product.name</p>
-                        </td>
-                        <td>@Helper.format_VND(cart_detail.product.price)</td>
-                        <td >
-                            <p style="margin: 10px">@cart_detail.quantity </p>
-                        </td>
-                        <td>@Helper.format_VND(cart_detail.product.price * cart_detail.quantity)</td>
-                    </tr>
-                }
-            }
-            </tbody>
-        </table>
-        <label for="">Tạm tính: </label>
-        <span>@Helper.format_VND(total_price)</span>
-        <br>
-        <label for="">Phí vận chuyển: </label>
-        @if(user.province is not null && (Helper.province_name(user.province) == "Hà Nội" || Helper.province_name(user.province)== "Hồ Chí Minh"))
-        {
-            <span id="shipping-fee">@Helper.format_VND(shipping_fee["hn_hcm"]) </span>
-        }
-        else if(user.province is null)
-        {
-            <span id="shipping-fee">___</span>
-        }
-        else
-        {
-            <span id="shipping-fee">@Helper.format_VND(shipping_fee["tinh_thanh"])</span>
-        }
-        <br>
-        <label for="">Tổng cộng: </label>
-        <span id="total_price">@Helper.format_VND(total_price + cart_shipping_fee)</span>
-    </div>
-</div>*@
 @section js{
     <script>
 /*{{--thêm script để tính tổng tiền khi chọn tỉnh/thành phố--}}

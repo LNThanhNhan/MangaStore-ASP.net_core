@@ -126,25 +126,11 @@ public class OrderController:Controller
         order.order_date = DateTime.Now;
         _context.Orders.Add(order);
         _context.SaveChanges();
-        foreach (var item in user.cart.cart_details)
+        if(order.payment_method == OrderPaymentMethod.VNPay)
         {
-            OrderDetail orderDetail = new OrderDetail();
-            orderDetail.order_id = order.id;
-            orderDetail.product_id = item.product_id;
-            orderDetail.quantity = item.quantity;
-            orderDetail.price = item.product.price;
-            orderDetail.total_price = item.product.price * item.quantity;
-            _context.OrderDetails.Add(orderDetail);
-            //lấy ra product và giảm số lượng
-            var product = _context.Products.FirstOrDefault(p => p.id == item.product_id);
-            product.quantity -= item.quantity;
-            _context.SaveChanges();
+            return RedirectToAction("Payment", "VnPay", new { orderId = order.id, totalPrice=order.total_price});
         }
-        //Sau đó xóa hết sản phẩm trong giỏ hàng
-        _context.CartDetails.RemoveRange(user.cart.cart_details);
-        _context.SaveChanges();
-        TempData["success"] = "Đặt hàng thành công";
-        return RedirectToAction("Index", "User");
+        return RedirectToAction("ProcessAfterSuscessPurchase", new { order.id });
     }
     
     [HttpGet]
@@ -169,6 +155,36 @@ public class OrderController:Controller
         order.status = OrderStatus.DA_HUY;
         _context.SaveChanges();
         TempData["success"] = "Hủy đơn hàng thành công";
+        return RedirectToAction("Index", "User");
+    }
+
+    public IActionResult ProcessAfterSuscessPurchase(int order_id)
+    {
+        var order = _context.Orders
+            .Include(o => o.user)
+            .ThenInclude(u => u.cart)
+            .ThenInclude(c => c.cart_details)
+            .ThenInclude(cd => cd.product)
+            .FirstOrDefault(o => o.id == order_id);
+        var cart = order.user.cart;
+        foreach (var item in cart.cart_details)
+        {
+            OrderDetail orderDetail = new OrderDetail();
+            orderDetail.order_id = order.id;
+            orderDetail.product_id = item.product_id;
+            orderDetail.quantity = item.quantity;
+            orderDetail.price = item.product.price;
+            orderDetail.total_price = item.product.price * item.quantity;
+            _context.OrderDetails.Add(orderDetail);
+            //lấy ra product và giảm số lượng
+            var product = _context.Products.FirstOrDefault(p => p.id == item.product_id);
+            product.quantity -= item.quantity;
+            _context.SaveChanges();
+        }
+        //Sau đó xóa hết sản phẩm trong giỏ hàng
+        _context.CartDetails.RemoveRange(cart.cart_details);
+        _context.SaveChanges();
+        TempData["success"] = "Đặt hàng thành công";
         return RedirectToAction("Index", "User");
     }
 }
