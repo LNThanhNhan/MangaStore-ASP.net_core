@@ -14,6 +14,7 @@ Xây dựng trang web mà khách hàng có thể ghé thăm và mua các thể l
 - Validation
 - AJAX/API
 - reCAPTCHA V3
+- thanh toán bằng VNPAY
 ## Các tính năng đã thực hiện được
 - Quản lý khách hàng, sản phẩm, nhân viên cửa hàng
 - Hoàn thiện quy trình mua hàng của khách hàng
