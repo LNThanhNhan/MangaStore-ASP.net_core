@@ -3,7 +3,7 @@ using MangaStore.Enums;
 
 namespace MangaStore.Helpers
 {
-    public class Helper
+    public static class Helper
     {
         //làm hàm MakeSlug để chuyển chuyển tiếng việt có dấu thành không dấu và chuyển thành slug
         //vd: Trường quê sạch và đẹp lắm do bố xây kĩ => truong-que-sach-va-dep-lam-do-bo-xay-ki

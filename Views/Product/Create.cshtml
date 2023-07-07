@@ -30,117 +30,114 @@
         <div class="col-md-12 ">
     <!-- general form elements -->
             <div class="card card-primary">
-                <form asp-controller="Product" asp-action="Create" method="post">
+                    <form asp-controller="Product" asp-action="Create" method="post" enctype="multipart/form-data">
                 <div class="row">
+                    <div class="col-md-6">
+                        <div class="card-body">
 
-                                <div class="col-md-6">
-                                    <div class="card-body">
+                            <div class="form-group">
+                                <label for="name">Tên truyện</label>
+                                <input type="text" class="form-control" id="name" placeholder="" asp-for="name">
+                            </div>
 
-                                        <div class="form-group">
-                                            <label for="name">Tên truyện</label>
-                                            <input type="text" class="form-control" id="name" placeholder="" asp-for="name">
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="description">Mô tả</label>
-                                            <textarea rows="5" cols="70" class="form-control" id="description" placeholder="" asp-for="description"></textarea>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-8">
-                                                <div class="form-group">
-                                                    <label for="author">Tác giả</label>
-                                                    <input type="text" class="form-control" id="author" placeholder="" asp-for="author">
-                                                </div>
-
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="publish_year">Năm xuất bản</label>
-                                                    <input type="number" class="form-control" id="publish_year" placeholder="" asp-for="publish_year">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="price">Giá niêm yết</label>
-                                                    <input type="number" class="form-control" id="list_price" placeholder="" asp-for="list_price">
-                                                </div>
-
-                                            </div>
-                                            <div class="col-md-8">
-                                                <div class="form-group">
-                                                    <label for="discount_rate">Chiết khấu</label>
-                                                    <input type="number" class="form-control" id="discount_rate" placeholder="" asp-for="discount_rate" value="10">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group ">
-                                                    <label for="quantity">Số lượng</label>
-                                                    <input type="int" class="form-control" id="quantity" placeholder="" asp-for="quantity">
-                                                </div>
-
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="size">Kích cỡ</label>
-                                                    <input type="text" class="form-control" id="size" placeholder="" asp-for="size">
-                                                </div>
-
-                                            </div>
-                                            <div class="col-md-4">
-
-                                                <div class="form-group">
-                                                    <label for="category">Thể loại</label>
-                                                    <select id="category" asp-for="category" class="form-control custom-select">
-                                                        <option value="" selected>Chọn thể loại</option>
-                                                        @*@foreach($arrProductCategory as $key => $value)
-                                                            <option value="{{$value}}">{{$key}}</option>
-                                                        @endforeach*@
-                                                        @if (TheLoai is not null)
-                                                        {
-                                                        	foreach (var item in TheLoai)
-                                                        	{
-                                                        		<option value="@item.Value">@item.Key</option>
-                                                        	}
-                                                        }
-                                                    </select>
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="collection">Bộ truyện</label>
-                                            <input type="text" class="form-control" id="collection" placeholder="" asp-for="collection">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="image">Link ảnh sản phẩm</label>
-                                            <input type="text" class="form-control" id="collection" placeholder="" asp-for="image">
-                                        </div>
+                            <div class="form-group">
+                                <label for="description">Mô tả</label>
+                                <textarea rows="5" cols="70" class="form-control" id="description" placeholder="" asp-for="description"></textarea>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label for="author">Tác giả</label>
+                                        <input type="text" class="form-control" id="author" placeholder="" asp-for="author">
                                     </div>
 
                                 </div>
-
-                                <!-- /.card-body -->
-
-                                <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">Thêm</button>
-                                    <a asp-controller="Product" asp-action="Index" type="cancel" class="btn btn-danger ">Hủy bỏ</a>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="publish_year">Năm xuất bản</label>
+                                        <input type="number" class="form-control" id="publish_year" placeholder="" asp-for="publish_year">
+                                    </div>
                                 </div>
                             </div>
-                        </form>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="price">Giá niêm yết</label>
+                                        <input type="number" class="form-control" id="list_price" placeholder="" asp-for="list_price">
+                                    </div>
+
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label for="discount_rate">Chiết khấu</label>
+                                        <input type="number" class="form-control" id="discount_rate" placeholder="" asp-for="discount_rate" value="10">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group ">
+                                        <label for="quantity">Số lượng</label>
+                                        <input type="int" class="form-control" id="quantity" placeholder="" asp-for="quantity">
+                                    </div>
+
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="size">Kích cỡ</label>
+                                        <input type="text" class="form-control" id="size" placeholder="" asp-for="size">
+                                    </div>
+
+                                </div>
+                                <div class="col-md-4">
+
+                                    <div class="form-group">
+                                        <label for="category">Thể loại</label>
+                                        <select id="category" asp-for="category" class="form-control custom-select">
+                                            <option value="" selected>Chọn thể loại</option>
+                                            @*@foreach($arrProductCategory as $key => $value)
+                                                <option value="{{$value}}">{{$key}}</option>
+                                            @endforeach*@
+                                            @if (TheLoai is not null)
+                                            {
+                                                foreach (var item in TheLoai)
+                                                {
+                                                    <option value="@item.Value">@item.Key</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="collection">Bộ truyện</label>
+                                <input type="text" class="form-control" id="collection" placeholder="" asp-for="collection">
+                            </div>
+                            <div class="form-group">
+                                <label for="image_file">Ảnh sản phẩm</label>
+                                <input type="file" class="form-control" id="collection" placeholder="" asp-for="image_file" accept="image/*">
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">Thêm</button>
+                        <a asp-controller="Product" asp-action="Index" type="cancel" class="btn btn-danger ">Hủy bỏ</a>
                     </div>
                 </div>
+            </form>
             </div>
         </div>
     </div>
+    </div>
+</div>
                         <!-- /.card-header -->
                         <!-- form start -->
 

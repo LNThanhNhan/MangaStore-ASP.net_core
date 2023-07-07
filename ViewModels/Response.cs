@@ -1,9 +1,11 @@
-﻿namespace MangaStore.ViewModels;
+﻿using Newtonsoft.Json.Linq;
+
+namespace MangaStore.ViewModels;
 
 [Serializable]
 public class Response
 {
     public bool success { get; set; }
     public string message { get; set; }=string.Empty;
-    public object data { get; set; }=null;
+    public Object data { get; set; }=null;
 }

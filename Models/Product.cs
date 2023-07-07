@@ -21,6 +21,9 @@ namespace MangaStore.Models
         [MaxLength(255)]
         public string slug { get; set; }
 
+        [MaxLength(36)]
+        public string image_uuid { get; set; }
+
         [Required]
         public string image { get; set; }
 

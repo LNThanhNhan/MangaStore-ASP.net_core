@@ -17,10 +17,10 @@ namespace MangaStore.Validators
                 .NotEmpty().WithMessage("Tên sách không được để trống")
                 .MaximumLength(255).WithMessage("Tên sách không được quá 255 ký tự");
 
-            RuleFor(x => x.image)
+            /*RuleFor(x => x.image)
                 .NotEmpty().WithMessage("Ảnh sách không được để trống")
                 .Must(x => Uri.IsWellFormedUriString(x, UriKind.Absolute)).WithMessage("Ảnh sách không đúng định dạng");
-
+*/
 
             RuleFor(x => x.author)
                 .NotEmpty().WithMessage("Tên tác giả không được để trống")

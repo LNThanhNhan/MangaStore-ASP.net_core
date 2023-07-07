@@ -8,6 +8,9 @@ using FluentValidation;
 using FluentValidation.Results;
 using FluentValidation.AspNetCore;
 using X.PagedList;
+using MangaStore.Services.Firebase.StorageService;
+using MangaStore.Helpers;
+using Newtonsoft.Json.Linq;
 
 namespace MangaStore.Controllers
 {
@@ -55,12 +58,15 @@ namespace MangaStore.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult Create(ProductViewModel product)
+		public async Task<IActionResult> Create(ProductViewModel product)
 		{
 			ValidationResult result = _viewValidator.Validate(product);
 			if (result.IsValid)
             {
                 Product newProduct = _mapper.Map<Product>(product);
+                JObject imageUploadResponse = await StorageService.UploadImage(product.image_file);
+                newProduct.image_uuid = imageUploadResponse.SelectToken("data.Id")!.ToString();
+				newProduct.image = imageUploadResponse.SelectToken("data.Url")!.ToString();
                 _context.Products.Add(newProduct);
                 _context.SaveChanges();
                 TempData["success"] = "Thêm thành công";
@@ -86,18 +92,21 @@ namespace MangaStore.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult Edit(EditProductViewModel product)
+		public async Task<IActionResult> Edit(EditProductViewModel product)
 		{
 			ValidationResult result = _editViewlValidator.Validate(product);
 			if (ModelState.IsValid)
 			{
-				Product editProduct = _mapper.Map<Product>(product);
-				_context.Products.Update(editProduct);
+                Product editProduct = _mapper.Map<Product>(product);
+                JObject imageUploadResponse = await StorageService.UpdateImage(product.image_file, product.image_uuid);
+                editProduct.image_uuid = imageUploadResponse.SelectToken("data.Id")!.ToString();
+                editProduct.image = imageUploadResponse.SelectToken("data.Url")!.ToString();
+                _context.Products.Update(editProduct);
 				_context.SaveChanges();
 				TempData["success"] = "Sửa thành công";
 				return RedirectToAction("Index");
 			}
-			ModelState.Clear();
+			//ModelState.Clear();
 			result.AddToModelState(this.ModelState);
 			return View(product);
 		}
@@ -105,13 +114,14 @@ namespace MangaStore.Controllers
 		//delete
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult Delete(int id)
+		public async Task<IActionResult> Delete(int id)
 		{
 			var product = _context.Products.Find(id);
 			if (product == null)
 			{
 				return NotFound();
 			}
+            await StorageService.DeleteImage(product.image_uuid);
 			_context.Products.Remove(product);
 			_context.SaveChanges();
 			TempData["success"] = "Xóa thành công";

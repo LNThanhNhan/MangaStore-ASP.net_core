@@ -29,7 +29,7 @@
         <div class="col-md-12 ">
     <!-- general form elements -->
             <div class="card card-primary">
-                <form asp-controller="Product" asp-action="Edit" method="post">
+                    <form asp-controller="Product" asp-action="Edit" method="post" enctype="multipart/form-data">
                 <div class="row">
 
                                 <div class="col-md-6">
@@ -120,8 +120,12 @@
                                             <input type="text" class="form-control" id="collection" placeholder="" asp-for="collection">
                                         </div>
                                         <div class="form-group">
-                                            <label for="image">Link ảnh sản phẩm</label>
-                                            <input type="text" class="form-control" id="collection" placeholder="" asp-for="image">
+                                        <label for="image_file">Ảnh sản phẩm</label>
+                                            <div>
+<img                                            <img src="@Model.image" id="image" alt="Ảnh sản phẩm" width="130" height="180">
+                                            </div>
+                                        <input type="hidden" asp-for="image_uuid" />
+                                        <input type="file" class="form-control" id="collection" placeholder="" asp-for="image_file" accept="image/*">
                                         </div>
                                     </div>
 

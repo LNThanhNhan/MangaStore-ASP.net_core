@@ -24,9 +24,13 @@ namespace MangaStore.ViewModels
                 return null;
             }
         }
+        [Display(Name = "File ảnh")]
+        public IFormFile image_file { get; set; }
 
-        [Display(Name = "Ảnh sản phẩm")] 
-        public string image { get; set; }
+        [Display(Name = "Ảnh sản phẩm")]
+        public string image { get; set; } = "";
+
+        public string image_uuid { get; set; }="";
 
         [Display(Name = "Tác giả")] 
         public string author { get; set; }
