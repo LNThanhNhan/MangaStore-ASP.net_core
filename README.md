@@ -8,6 +8,9 @@ Xây dựng trang web mà khách hàng có thể ghé thăm và mua các thể l
 | 2       | Trương Ý Nhi            | Frontend                                    | 20%          |
 | 3       | Lâm Võ Khánh My         | Thiết kế giao diện, hỗ trợ Frontend         | 20%          |
 
+## Lưu ý 
+- Cần cài đặt thêm web server Go để sử dụng được chức năng Firebase Storage. [Xem tại đây](https://github.com/LNThanhNhan/FirebaseGo)
+
 ## Những thứ đã học được
 - Framework ASP.NET Core 6
 - Entity Framework (ORM)
@@ -15,6 +18,7 @@ Xây dựng trang web mà khách hàng có thể ghé thăm và mua các thể l
 - AJAX/API
 - reCAPTCHA V3
 - thanh toán bằng VNPAY
+- Firebase Storage
 ## Các tính năng đã thực hiện được
 - Quản lý khách hàng, sản phẩm, nhân viên cửa hàng
 - Hoàn thiện quy trình mua hàng của khách hàng
@@ -29,9 +33,7 @@ Xây dựng trang web mà khách hàng có thể ghé thăm và mua các thể l
 ## Khó khăn 
 - Đồ án này chỉ được thực hiện trong vòng 3 tuần (vừa học vừa làm) nên sẽ có rất nhiều thiếu sót cùng với các tính năng nên có như: 
 1. OAuth bằng các tài khoản mạng xã hội (Google, Facebook,v.v..)
-2. Có thêm phương thức thanh toán khác (trong tương lai sẽ thêm thanh toán bằng VNPay)
-3. Quản lý việc thêm hình ảnh bằng cloud (trong tương lai sẽ thay bằng bằng Imgur)
-4. Chưa thực hiện hết các use case đã đề ra
+
 
 ## Tài liệu tiếng việt 
 Tài liệu tiếng việc về project có thể đọc [tại đây](https://drive.google.com/file/d/1T9nKVgqFZZhSVR2ikRvQC2Zp5g1x08tn/view?usp=sharing)
