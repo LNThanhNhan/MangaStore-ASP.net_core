@@ -22,7 +22,7 @@ public class OrderPaymentMethod
         {
             {"COD", COD},
             {"Ngân hàng", NGAN_HANG},
-            {"Zalo Pay", VNPay},
+            {"VNPay", VNPay},
         };
     }
     

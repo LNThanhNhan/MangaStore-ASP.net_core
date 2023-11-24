@@ -13,7 +13,7 @@ namespace MangaStore.Services.VnPay.Interface
             string vnp_CreateDate = DateTime.Now.ToString("yyyyMMddHHmmss");
             string vnp_CurrCode = configuration["VnPay:CurrencyCode"];
             //lấy địa chỉ ip của khách hàng
-            string vnp_IpAddr = httpContextAccessor!.HttpContext!.Request.Headers["X-Forwarded-For"];
+            string vnp_IpAddr = "127.0.0.1";
             //string vnp_IpAddr = VnPayLibrary.GetIpAddress(httpContextAccessor);
             string vnp_Locale = configuration["VnPay:Locale"];
             string vnp_OrderInfo = request.vnp_OrderInfo;
@@ -21,6 +21,8 @@ namespace MangaStore.Services.VnPay.Interface
             string vnp_ExpireDate = DateTime.Now.AddMinutes(15).ToString("yyyyMMddHHmmss");
             string vnp_TxnRef = request.vnp_TransactionNo;
             string secureHash = Token.vnp_HashSecr;
+
+            string oderType = "other";
 
             //Sử dụng vnPayLibrary để tạo link thanh toán
             VnPayLibrary vnPayLibrary = new VnPayLibrary();
@@ -36,6 +38,7 @@ namespace MangaStore.Services.VnPay.Interface
             vnPayLibrary.AddRequestData("vnp_ReturnUrl", vnp_ReturnUrl);
             vnPayLibrary.AddRequestData("vnp_TxnRef", vnp_TxnRef);
             vnPayLibrary.AddRequestData("vnp_ExpireDate", vnp_ExpireDate);
+            vnPayLibrary.AddRequestData("vnp_OrderType", oderType);
             string paymentUrl = vnPayLibrary.CreateRequestUrl(configuration["VnPay:BaseUrl"], secureHash);
             return paymentUrl;
         }

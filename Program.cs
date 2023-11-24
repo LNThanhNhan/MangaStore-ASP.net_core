@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add a service to the container.
 builder.Services.AddControllersWithViews();
 
 // Add dbcontext for connect to database

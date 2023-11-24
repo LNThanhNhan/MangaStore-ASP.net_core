@@ -32,6 +32,8 @@ namespace MangaStore.Controllers
                 vnp_Amount = totalPrice,
             };
             string url = _vnPayService.CreateRequestUrl(paymentRequest,_configuration,_httpContextAccessor,returnURL);
+            //Console.WriteLine(url);
+            //string temp = url;
             return Redirect(url);
         }
         public IActionResult ReturnCallback([FromQuery] string vnp_ResponseCode, [FromQuery] int vnp_TxnRef)
